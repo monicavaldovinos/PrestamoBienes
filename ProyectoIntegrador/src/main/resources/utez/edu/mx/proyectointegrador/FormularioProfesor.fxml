@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="utez.edu.mx.proyectointegrador.controller.FormularioProfesorController"
+      alignment="CENTER"
+      spacing="15"
+      stylesheets="@estilos.css"
+      style="-fx-padding: 25; -fx-background-color: white;"
+      maxWidth="500">
+
+
+    <Label text="Editar Profesor" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <!-- Campo Nombre -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ImageView fitWidth="20" fitHeight="20">
+            <image>
+                <Image url="@iconos/user.png"/>
+            </image>
+        </ImageView>
+        <TextField fx:id="txtNombre" promptText="Nombre" styleClass="textfield-largo"/>
+    </HBox>
+
+    <!-- Campo Correo -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ImageView fitWidth="20" fitHeight="20">
+            <image>
+                <Image url="@iconos/mail.png"/>
+            </image>
+        </ImageView>
+        <TextField fx:id="txtCorreo" promptText="Correo electrónico" styleClass="textfield-largo"/>
+    </HBox>
+
+    <!-- Campo Teléfono -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ImageView fitWidth="20" fitHeight="20">
+            <image>
+                <Image url="@iconos/phone.png"/>
+            </image>
+        </ImageView>
+        <TextField fx:id="txtTelefono" promptText="Teléfono" styleClass="textfield-largo"/>
+    </HBox>
+
+    <!-- Campo División -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ImageView fitWidth="20" fitHeight="20">
+            <image>
+                <Image url="@iconos/location.png"/>
+            </image>
+        </ImageView>
+        <TextField fx:id="txtDivision" promptText="División" styleClass="textfield-largo"/>
+    </HBox>
+
+    <!-- Campo Materia -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ImageView fitWidth="20" fitHeight="20">
+            <image>
+                <Image url="@iconos/calendar.png"/>
+            </image>
+        </ImageView>
+        <TextField fx:id="txtMateria" promptText="Materia" styleClass="textfield-largo"/>
+    </HBox>
+
+    <!-- Botones -->
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Agregar" onAction="#agregarProfesor"
+                style="-fx-background-color: #3f51b5; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 18;" />
+        <Button text="Cancelar" onAction="#cerrarVentana"
+                style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 6 18;" />
+    </HBox>
+</VBox>

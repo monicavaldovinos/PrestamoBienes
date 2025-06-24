@@ -1,0 +1,83 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f4f4f4;
+}
+
+.sidebar {
+    -fx-background-color: #002d62;
+    -fx-padding: 20;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-border-color: transparent;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #0066cc;
+}
+
+.header {
+    -fx-background-color: #00796b;
+    -fx-padding: 16;
+}
+
+.header-label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.table-button {
+    -fx-background-color: #005cb2;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 4 12;
+    -fx-font-weight: bold;
+}
+.menu-button {
+    -fx-background-color: #0059b3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+}
+
+.add-button {
+    -fx-background-color: #0d47a1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 15;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.2), 2, 0, 0, 2);
+}
+.table-row-cell {
+    -fx-cell-size: 30px; /* Puedes ajustar a 24px si quieres aún más compacto */
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-table-cell-border-color: #dcdcdc;
+    -fx-border-color: transparent;
+}
+.table-column {
+    -fx-alignment: CENTER_LEFT;
+}
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #ccc transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 4 4 4 0;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+}
+.text-field:focused {
+    -fx-border-color: transparent transparent #007acc transparent;
+}
+.textfield-largo {
+    -fx-pref-width: 350px;
+}
