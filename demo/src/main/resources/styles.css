@@ -1,0 +1,185 @@
+.login-box {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 0, 4);
+    -fx-spacing: 12;
+    -fx-alignment: center;
+
+}
+
+#title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00907A;
+}
+
+.text-field, .password-field {
+    -fx-pref-width: 220px;
+    -fx-background-radius: 8;
+}
+
+.button {
+    -fx-background-color: #00907A;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+}
+
+.button:hover {
+    -fx-background-color: #00909A;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #00909A;
+    -fx-border-width: 2;
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+
+//estilo de principal encargado-------------------------------------------------
+
+
+/* Menú lateral */
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-alignment: center-left;
+    -fx-padding: 8 12;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Título principal */
+#section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00907A;
+}
+
+/* Formulario */
+.formulario-contenedor {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0.2, 0, 2);
+}
+
+.formulario-contenedor .label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555;
+}
+
+.formulario-contenedor .text-field {
+    -fx-pref-width: 260;
+    -fx-background-radius: 6;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 6;
+}
+
+.formulario-contenedor .text-field:focused {
+    -fx-border-color: #3f51b5;
+    -fx-border-width: 2;
+    -fx-background-color: #eef2ff;
+}
+
+.formulario-contenedor .button {
+    -fx-background-color: #3f51b5;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 6 16;
+    -fx-font-weight: bold;
+}
+
+.formulario-contenedor .button:hover {
+    -fx-background-color: #303f9f;
+}
+
+//estilo para prestamos----------------------------------------------------
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-alignment: center-left;
+    -fx-padding: 8 12;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+#section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00907A;
+}
+
+.formulario-contenedor .combo-box,
+.formulario-contenedor .list-view,
+.formulario-contenedor .button {
+    -fx-pref-width: 280;
+}
+
+.formulario-contenedor .button {
+    -fx-background-color:#00907A;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 16;
+}
+
+.formulario-contenedor .button:disabled {
+    -fx-opacity: 0.5;
+}
+
+
+.formulario-prestamos .text-field,
+.formulario-prestamos .combo-box {
+    -fx-border-color: #00907A;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10;
+}
+
+.formulario-prestamos .text-field:focused,
+.formulario-prestamos .combo-box:focused {
+    -fx-border-color: #00907A;
+    -fx-border-width: 2;
+    -fx-background-color: white;
+}
+.formulario-prestamos .button {
+    -fx-background-color: #00907A;       /* color normal */
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 6 16;
+}
+
+/* Cuando el mouse pasa encima */
+.formulario-prestamos .button:hover {
+    -fx-background-color: #00909A;       /* tono más claro */
+}
+
+/* Cuando se presiona */
+.formulario-prestamos .button:pressed {
+    -fx-background-color: #00909A;       /* tono más oscuro */
+}
+
+
+
+
