@@ -1,5 +1,6 @@
 package utez.com.mx.demo;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
 
 public class HelloAplication extends Application {
 
-    @Override
+   /* @Override
     public void start(Stage primaryStage) {
         Label title = new Label("Iniciar sesión");
         title.setId("title");
@@ -56,9 +57,20 @@ public class HelloAplication extends Application {
         primaryStage.setTitle("Login");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }*/
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloAplication.class.getResource("/utez/com/mx/demo/view/Login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }
+
