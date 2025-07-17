@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="utez.edu.mx.prestamos_utez.controller.UsuarioController"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <VBox fx:id="box" alignment="CENTER" spacing="20" maxWidth="300" maxHeight="200">
+
+            <TextField fx:id="txtCorreo" promptText="Ingresa tu correo" />
+            <PasswordField fx:id="txtPass" promptText="Ingresa tu contraseña"/>
+            <Button fx:id="btnLogin" text="Login" onAction="#onLogin" />
+
+
+        </VBox>
+    </children>
+
+
+
+
+</StackPane>

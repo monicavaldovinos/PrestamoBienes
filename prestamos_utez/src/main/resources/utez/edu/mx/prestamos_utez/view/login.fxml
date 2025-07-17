@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/estilos.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.UsuarioController">
+
+    <children>
+
+        <VBox fx:id="loginBox" alignment="CENTER" maxHeight="300.0" maxWidth="400" spacing="20.0">
+   <children>
+               <!-- Barra verde superior -->
+               <Pane id="loginHeader" fx:id="loginHeader" prefHeight="60.0">
+               <VBox.margin>
+                  <Insets top="-20.0" />
+               </VBox.margin></Pane>
+            <Label text="Iniciar Sesión" textFill="#146b47">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+           <VBox id="login-box" fx:id="box" alignment="CENTER" maxHeight="200" maxWidth="300" spacing="30.0">
+              <children>
+      
+                  <TextField id="input-field" fx:id="txtCorreo" promptText="Ingresa tu correo">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></TextField>
+                  <PasswordField id="input-field" fx:id="txtPass" promptText="Ingresa tu contraseña" />
+                  <Button id="btn-login" fx:id="btnLogin" onAction="#onLogin" prefHeight="37.0" prefWidth="300.0" style="-fx-background-color: #008b76;" text="Login" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></Button>
+              </children>
+           </VBox>
+   </children>
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+        </VBox>
+    </children>
+</StackPane>
