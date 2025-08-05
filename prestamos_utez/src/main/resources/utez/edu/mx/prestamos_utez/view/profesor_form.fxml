@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane prefHeight="361.0" prefWidth="524.0" stylesheets="@../css/profesor_form.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.ProfesorFormController">
+
+    <children>
+        <VBox alignment="TOP_CENTER" prefHeight="328.0" prefWidth="484.0" spacing="20" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+
+            <children>
+                <!-- Título -->
+                <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Registro de Profesor" />
+
+                <!-- Formulario con etiquetas alineadas -->
+                <GridPane alignment="CENTER" hgap="6.0" prefHeight="228.0" prefWidth="484.0" vgap="15">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" minWidth="150" />
+                        <ColumnConstraints minWidth="300" />
+                    </columnConstraints>
+
+                    <children>
+                        <!-- Campo Nombre -->
+                        <Label text="Nombre del profesor:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="txtNombre" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <!-- Campo Apellidos -->
+                        <Label text="Apellidos del profesor:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtProfesor" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <!-- Campo Correo -->
+                        <Label text="Correo electrónico:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtCorreo" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <!-- Campo Telefono -->
+                        <Label text="Telefono:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtTelefono" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <!-- Campo División -->
+                        <Label text="División:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <ComboBox fx:id="cbDivision" prefHeight="30.0" prefWidth="300.0" promptText="Selecciona una división" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        </children>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+               </rowConstraints>
+                </GridPane>
+
+                <!-- Botones -->
+                <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="400.0" spacing="10">
+   <children>
+                       <Button contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #969CA3; -fx-text-fill: white; -fx-font-weight: bold;" text="Cancelar" />
+                       <Button contentDisplay="CENTER" onAction="#onGuardar" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #4A6FDB; -fx-text-fill: white; -fx-font-weight: bold;" text="Guardar">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
+   </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

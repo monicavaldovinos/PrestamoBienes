@@ -36,13 +36,13 @@ public class UsuarioController {
         try{
             if(dao.login(correo,pass)){
                 System.out.println("Usuario Validado");
-                //showAlertA("BIENVENIDO", "Bienvenido");
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/utez/edu/mx/prestamos_utez/view/profesor.fxml"));
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/utez/edu/mx/prestamos_utez/view/profesor_list.fxml"));
                 Parent root = loader.load();
 
                 Stage stage = new Stage();
-                stage.setTitle("Bienvenido");
+                stage.setTitle("UTEZ");
 
                 Scene scene = new Scene(root);
 
