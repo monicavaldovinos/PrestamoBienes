@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/18"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.rebup.MainController">
+
+ <left>
+    <VBox style="-fx-background-color: #022E5D;" spacing="40" alignment="TOP_LEFT" prefWidth="180">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="REBUP" style="-fx-text-fill: white; -fx-font-size: 24; -fx-padding: 0 0 0 10;" />
+
+        <VBox spacing="20" prefWidth="160">
+            <Button text="Prestamos"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 0 0 0 10;"
+                    alignment="CENTER_LEFT" />
+            <Button text="Devoluciones"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 0 0 0 10;"
+                    alignment="CENTER_LEFT" />
+        </VBox>
+    </VBox>
+</left>
+
+
+
+ <top>
+    <HBox style="-fx-background-color: #00907A;" alignment="CENTER_LEFT" prefHeight="60" spacing="10">
+        <padding>
+            <Insets top="0" right="30" bottom="0" left="30"/>
+        </padding>
+        <ImageView fitHeight="50" fitWidth="50" preserveRatio="true" pickOnBounds="true">
+            <image>
+                <Image url="@com/rebup/images/rebup.png" />
+            </image>
+        </ImageView>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label text="PRESTAMOS" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;" />
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
+</top>
+
+
+
+
+    <center>
+        <VBox spacing="15" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER" prefWidth="600">
+                <TextField fx:id="txtBuscar" promptText="Profesor" prefWidth="300" />
+                <Pane HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="comboFiltro" prefWidth="150"
+                          style="-fx-background-color: white; -fx-text-fill: black;" />
+            </HBox>
+
+            <GridPane fx:id="gridEquipos" hgap="40" vgap="40" alignment="CENTER" />
+
+            <Button fx:id="btnConfirmar" text="Confirmar préstamo"
+                    style="-fx-background-color: #00907A; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10 30;"
+                    maxWidth="220" alignment="CENTER" />
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           alignment="CENTER"
+           prefHeight="200" prefWidth="300">
+    <VBox spacing="20" alignment="CENTER">
+        <Label text="¡Préstamo confirmado!" style="-fx-font-size: 18px;" />
+        <Button text="Continuar" onAction="#cerrarVentana" 
+                style="-fx-background-color: #00907A; -fx-text-fill: white; -fx-background-radius: 20; -fx-font-weight: bold;"/>
+    </VBox>
+</StackPane>
