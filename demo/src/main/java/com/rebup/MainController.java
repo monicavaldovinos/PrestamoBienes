@@ -1,6 +1,8 @@
 package com.rebup;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -11,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -22,165 +25,288 @@ import javafx.stage.Stage;
 
 public class MainController {
 
-    @FXML
-    private GridPane gridEquipos;
+    @FXML private GridPane gridEquipos;
+    @FXML private ComboBox<String> comboFiltro;
+    @FXML private Button btnConfirmar;
+    @FXML private TextField txtBuscar;
+    @FXML private ImageView logo;
+    @FXML private Label lblContador;
 
-    @FXML
-    private ComboBox<String> comboFiltro;
+    private Map<String, Integer> seleccionados = new HashMap<>();
 
-    @FXML
-    private Button btnConfirmar;
+    @FXML private Button btnPrestamos;
+    @FXML private Button btnDevoluciones;
 
-    @FXML
-    private TextField txtBuscar;
+   @FXML
+public void initialize() {
+    Image img = new Image(getClass().getResourceAsStream("/com/rebup/images/rebup.png"));
+    logo.setImage(img);
 
-    @FXML
-    private ImageView logo;
 
-    private boolean haySeleccion = false;
+    Image iconPrestamos = new Image(getClass().getResourceAsStream("/com/rebup/images/prestamos.png"));
+    ImageView ivPrestamos = new ImageView(iconPrestamos);
+    ivPrestamos.setFitWidth(20);
+    ivPrestamos.setFitHeight(20);
+    btnPrestamos.setGraphic(ivPrestamos);
 
-    @FXML
-    public void initialize() {
-        try {
-            Image img = new Image(getClass().getResourceAsStream("/com/rebup/images/rebup.png"));
-            logo.setImage(img);
-        } catch (Exception e) {
-            System.out.println("No se pudo cargar la imagen rebup.png");
+    Image iconDevoluciones = new Image(getClass().getResourceAsStream("/com/rebup/images/devoluciones.png"));
+    ImageView ivDevoluciones = new ImageView(iconDevoluciones);
+    ivDevoluciones.setFitWidth(20);
+    ivDevoluciones.setFitHeight(20);
+    btnDevoluciones.setGraphic(ivDevoluciones);
+
+    comboFiltro.getItems().addAll("Todos", "Disponible", "No disponible");
+    comboFiltro.setValue("Todos");
+    comboFiltro.setOnAction(e -> mostrarEquipos(comboFiltro.getValue()));
+    comboFiltro.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: white; -fx-text-fill: black; -fx-background-radius: 5; -fx-border-radius: 5;");
+
+    btnConfirmar.setDisable(true);
+
+    btnConfirmar.setOnAction(e -> {
+        if (!seleccionados.isEmpty()) {
+            mostrarConfirmacion();
         }
+    });
 
-        comboFiltro.getItems().addAll("Todos", "Disponible", "No disponible");
-        comboFiltro.setValue("Todos");
-        comboFiltro.setOnAction(e -> mostrarEquipos(comboFiltro.getValue()));
-        mostrarEquipos("Todos");
+    mostrarEquipos("Todos");
+    actualizarContador();
+}
 
-        haySeleccion = false;
-        btnConfirmar.setDisable(true);
 
-        btnConfirmar.setOnAction(e -> {
-            if (haySeleccion) {
-                mostrarAlerta();
-            }
-        });
-    }
+   private void mostrarEquipos(String filtro) {
+    gridEquipos.getChildren().clear();
+    seleccionados.clear();
+    btnConfirmar.setDisable(true);
+    actualizarContador();
 
-    private void mostrarEquipos(String filtro) {
-        gridEquipos.getChildren().clear();
+    List<String> tipos = List.of("switch", "router", "adaptador", "proyector", "camara", "laptop");
 
-        List<String> tipos = List.of("switch", "router", "adaptador", "proyector", "camara", "laptop");
+    int columna = 0, fila = 0;
 
-        int columna = 0, fila = 0;
-
-        for (String tipo : tipos) {
-            if (!filtro.equals("Todos")) {
-                if (filtro.equals("Disponible") && (tipo.equalsIgnoreCase("laptop") || tipo.equalsIgnoreCase("proyector"))) continue;
-                if (filtro.equals("No disponible") && (tipo.equalsIgnoreCase("switch") || tipo.equalsIgnoreCase("laptop") || tipo.equalsIgnoreCase("proyector"))) continue;
-            }
-
-            VBox contenedor = new VBox(3);
-            contenedor.setAlignment(Pos.CENTER);
-
-            String rutaImagen = "/com/rebup/images/" + tipo.toLowerCase() + ".png";
-            Image imagen;
-            try {
-                imagen = new Image(getClass().getResourceAsStream(rutaImagen));
-                if (imagen.isError()) continue;
-            } catch (Exception e) {
+    for (String tipo : tipos) {
+        if (!filtro.equals("Todos")) {
+            if (filtro.equals("Disponible") && (tipo.equalsIgnoreCase("laptop") || tipo.equalsIgnoreCase("proyector")))
                 continue;
+            if (filtro.equals("No disponible") && (tipo.equalsIgnoreCase("switch") || tipo.equalsIgnoreCase("laptop") || tipo.equalsIgnoreCase("proyector")))
+                continue;
+        }
+
+        VBox contenedor = new VBox(5);
+        contenedor.setAlignment(Pos.CENTER);
+        contenedor.setPadding(new Insets(10));
+
+        String rutaImagen = "/com/rebup/images/" + tipo.toLowerCase() + ".png";
+        Image imagen;
+        try {
+            imagen = new Image(getClass().getResourceAsStream(rutaImagen));
+            if (imagen.isError())
+                continue;
+        } catch (Exception e) {
+            continue;
+        }
+
+        ImageView imageView = new ImageView(imagen);
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(120);
+        imageView.setCursor(Cursor.HAND);
+
+        StackPane imageWithPlus = new StackPane();
+        imageWithPlus.setPrefSize(120, 120);
+
+        Label plusLabel = new Label("+");
+        plusLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
+
+        StackPane plusCircle = new StackPane(plusLabel);
+        plusCircle.setStyle("-fx-background-color: #00907A; -fx-background-radius: 50%;");
+        plusCircle.setPrefSize(24, 24);
+        plusCircle.setMaxSize(24, 24);
+        StackPane.setAlignment(plusCircle, Pos.TOP_RIGHT);
+        StackPane.setMargin(plusCircle, new Insets(3, 3, 0, 0)); 
+        Label minusLabel = new Label("-");
+        minusLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
+        StackPane minusCircle = new StackPane(minusLabel);
+        minusCircle.setStyle("-fx-background-color: #E94B3C; -fx-background-radius: 50%;");
+        minusCircle.setPrefSize(24, 24);
+        minusCircle.setMaxSize(24, 24);
+        StackPane.setAlignment(minusCircle, Pos.TOP_LEFT);
+        StackPane.setMargin(minusCircle, new Insets(3, 0, 0, 3));
+        minusCircle.setVisible(false);
+
+        imageWithPlus.getChildren().addAll(imageView, plusCircle, minusCircle);
+
+        StackPane imageBorderPane = new StackPane(imageWithPlus);
+        imageBorderPane.setPrefSize(130, 130);
+        imageBorderPane.setStyle("-fx-border-color: #D2D2D2; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
+
+        String textoBoton = tipo.substring(0, 1).toUpperCase() + tipo.substring(1).toLowerCase();
+        Button botonObjeto = new Button(textoBoton);
+        botonObjeto.setPrefSize(110, 25);
+        botonObjeto.setStyle("-fx-background-color: #00907A; -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 8;");
+
+        
+        imageView.setOnMouseClicked(e -> {
+            agregarObjeto(tipo, imageBorderPane, minusCircle);
+        });
+
+        
+        botonObjeto.setOnAction(e -> {
+            agregarObjeto(tipo, imageBorderPane, minusCircle);
+        });
+
+        plusCircle.setOnMouseClicked(e -> {
+            agregarObjeto(tipo, imageBorderPane, minusCircle);
+        });
+
+        minusCircle.setOnMouseClicked(e -> {
+            disminuirObjeto(tipo, imageBorderPane, minusCircle);
+        });
+
+        contenedor.getChildren().addAll(imageBorderPane, botonObjeto);
+        gridEquipos.add(contenedor, columna, fila);
+
+        columna++;
+        if (columna == 3) {
+            columna = 0;
+            fila++;
+        }
+    }
+}
+
+
+    private void toggleSeleccion(String tipo, StackPane borderPane) {
+        if (seleccionados.containsKey(tipo) && seleccionados.get(tipo) > 0) {
+            seleccionados.remove(tipo);
+            borderPane.setStyle("-fx-border-color: #D2D2D2; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
+        } else {
+            seleccionados.put(tipo, 1);
+            borderPane.setStyle("-fx-border-color: #00907A; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        }
+        actualizarContador();
+        btnConfirmar.setDisable(seleccionados.isEmpty());
+    }
+
+    private void agregarObjeto(String tipo, StackPane borderPane, StackPane minusCircle) {
+        seleccionados.put(tipo, seleccionados.getOrDefault(tipo, 0) + 1);
+        borderPane.setStyle("-fx-border-color: #00907A; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        minusCircle.setVisible(true);
+        actualizarContador();
+        btnConfirmar.setDisable(false);
+    }
+
+    private void disminuirObjeto(String tipo, StackPane borderPane, StackPane minusCircle) {
+        if (seleccionados.containsKey(tipo)) {
+            int count = seleccionados.get(tipo);
+            if (count > 1) {
+                seleccionados.put(tipo, count - 1);
+            } else {
+                seleccionados.remove(tipo);
+                borderPane.setStyle("-fx-border-color: #D2D2D2; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
+                minusCircle.setVisible(false);
             }
-
-            ImageView imageView = new ImageView(imagen);
-            imageView.setFitWidth(120);
-            imageView.setFitHeight(120);
-            imageView.setCursor(Cursor.HAND);
-            imageView.setOnMouseClicked(e -> mostrarConfirmacion(tipo));
-
-            StackPane stack = new StackPane(imageView);
-            stack.setAlignment(Pos.TOP_RIGHT);
-
-            String textoBoton = tipo.substring(0, 1).toUpperCase() + tipo.substring(1).toLowerCase();
-            Button botonObjeto = new Button(textoBoton);
-            botonObjeto.setPrefSize(110, 25);
-            botonObjeto.setStyle(
-                "-fx-background-color: #00907A; -fx-text-fill: white; " +
-                "-fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 8;"
-            );
-            botonObjeto.setOnAction(e -> mostrarConfirmacion(tipo));
-
-            contenedor.getChildren().addAll(stack, botonObjeto);
-            gridEquipos.add(contenedor, columna, fila);
-
-            columna++;
-            if (columna == 3) {
-                columna = 0;
-                fila++;
+            actualizarContador();
+            if (seleccionados.isEmpty()) {
+                btnConfirmar.setDisable(true);
             }
         }
     }
 
-    private void mostrarConfirmacion(String tipo) {
+    private void actualizarContador() {
+        if (lblContador != null) {
+            if (seleccionados.isEmpty()) {
+                lblContador.setText("No has seleccionado objetos");
+            } else {
+                StringBuilder sb = new StringBuilder();
+                int total = 0;
+                for (Map.Entry<String, Integer> entry : seleccionados.entrySet()) {
+                    sb.append("Llevas ").append(entry.getValue()).append(" ").append(entry.getKey());
+                    if (entry.getValue() > 1) sb.append("s");
+                    sb.append("\n");
+                    total += entry.getValue();
+                }
+                sb.append("Llevas en total ").append(total).append(" objeto");
+                if (total != 1) sb.append("s");
+                lblContador.setText(sb.toString());
+            }
+        }
+    }
+
+    private void mostrarConfirmacion() {
+        Scene escenaPrincipal = btnConfirmar.getScene();
+        GaussianBlur blur = new GaussianBlur(15);
+        escenaPrincipal.getRoot().setEffect(blur);
+
         Stage alerta = new Stage();
         alerta.initModality(Modality.APPLICATION_MODAL);
         alerta.setTitle("Confirmación");
 
         Label mensaje = new Label("¿ESTÁS SEGURO DE CONFIRMAR PRÉSTAMO?");
-        mensaje.setStyle("-fx-font-size: 28px; -fx-text-fill: black; -fx-font-weight: bold;");
+        mensaje.setStyle("-fx-font-size: 18px; -fx-text-fill: black; -fx-font-weight: bold;");
 
         Button btnSi = new Button("¡Sí, confirmar!");
-        btnSi.setPrefSize(296, 73);
-        btnSi.setStyle(
-            "-fx-background-color: #4A6FDB; -fx-text-fill: white; " +
-            "-fx-font-size: 18px; -fx-font-weight: bold;"
-        );
+        btnSi.setPrefSize(150, 50);
+        btnSi.setStyle("-fx-background-color: #4A6FDB; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;");
         btnSi.setOnAction(e -> {
-            haySeleccion = true;
-            btnConfirmar.setDisable(false);
+            seleccionados.clear();
+            btnConfirmar.setDisable(true);
             alerta.close();
+            mostrarAlerta();
+            mostrarEquipos(comboFiltro.getValue());
         });
 
         Button btnNo = new Button("Cancelar");
-        btnNo.setPrefSize(296, 73);
-        btnNo.setStyle(
-            "-fx-background-color: #DC3030; -fx-text-fill: white; " +
-            "-fx-font-size: 18px; -fx-font-weight: bold;"
-        );
-        btnNo.setOnAction(e -> alerta.close());
+        btnNo.setPrefSize(150, 50);
+        btnNo.setStyle("-fx-background-color: #D3D3D3; -fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold;");
+        btnNo.setOnAction(e -> {
+            alerta.close();
+            escenaPrincipal.getRoot().setEffect(null);
+        });
 
-        HBox botones = new HBox(40, btnSi, btnNo);
+        HBox botones = new HBox(20, btnNo, btnSi);
         botones.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(60, mensaje, botones);
+        VBox layout = new VBox(40, mensaje, botones);
         layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(40));
+        layout.setPadding(new Insets(30));
         layout.setStyle("-fx-background-color: white; -fx-border-radius: 20; -fx-background-radius: 20;");
 
-        Scene scene = new Scene(layout, 737, 521);
+        Scene scene = new Scene(layout, 600, 400);
         alerta.setScene(scene);
+        alerta.centerOnScreen();
+        alerta.setOnCloseRequest(e -> escenaPrincipal.getRoot().setEffect(null));
         alerta.showAndWait();
     }
 
     private void mostrarAlerta() {
+        Scene escenaPrincipal = btnConfirmar.getScene();
+        GaussianBlur blur = new GaussianBlur(15);
+        escenaPrincipal.getRoot().setEffect(blur);
+
         Stage alerta = new Stage();
         alerta.initModality(Modality.APPLICATION_MODAL);
         alerta.setTitle("Confirmación");
+
+        ImageView checkIcon = new ImageView(new Image(getClass().getResourceAsStream("/com/rebup/images/check.png")));
+        checkIcon.setFitWidth(100);
+        checkIcon.setFitHeight(100);
 
         Label mensaje = new Label("¡Préstamo confirmado!");
         mensaje.setStyle("-fx-font-size: 28px; -fx-text-fill: black;");
 
         Button btnContinuar = new Button("Continuar");
-        btnContinuar.setStyle(
-            "-fx-background-color: white; -fx-text-fill: black; " +
-            "-fx-font-size: 18px; -fx-border-color: black; " +
-            "-fx-padding: 10 40;"
-        );
-        btnContinuar.setOnAction(e -> alerta.close());
+        btnContinuar.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 18px; -fx-border-color: black; -fx-padding: 10 40;");
+        btnContinuar.setOnAction(e -> {
+            alerta.close();
+            escenaPrincipal.getRoot().setEffect(null);
+        });
 
-        VBox layout = new VBox(100, mensaje, btnContinuar);
+        VBox layout = new VBox(40, checkIcon, mensaje, btnContinuar);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
-        layout.setStyle("-fx-background-color: white;");
+        layout.setStyle("-fx-background-color: white; -fx-border-radius: 20; -fx-background-radius: 20;");
 
-        Scene scene = new Scene(layout, 737, 521);
+        Scene scene = new Scene(layout, 620, 500);
         alerta.setScene(scene);
+        alerta.centerOnScreen();
         alerta.showAndWait();
     }
 }

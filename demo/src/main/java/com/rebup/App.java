@@ -10,6 +10,7 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/rebup/main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(App.class.getResource("/com/rebup/styles.css").toExternalForm());
         stage.setTitle("Préstamos - REBUP");
         stage.setScene(scene);
         stage.show();
