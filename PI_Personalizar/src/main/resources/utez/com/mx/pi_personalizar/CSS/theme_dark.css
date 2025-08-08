@@ -1,0 +1,8 @@
+.root {
+    -fx-background-color: #ecf5ff;
+}
+.menu-button {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
