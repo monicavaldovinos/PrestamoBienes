@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="utez.com.mx.pi_personalizar.MenuController">
+    <left>
+        <VBox spacing="10" style="-fx-background-color: #2C3E50;" alignment="TOP_CENTER" prefWidth="150">
+            <Label text="REBUP" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 10;" />
+            <Button text="Profesores" graphicTextGap="10" styleClass="menu-button" />
+            <Button text="Objetos" graphicTextGap="10" styleClass="menu-button" />
+            <Button text="Historial" graphicTextGap="10" styleClass="menu-button" />
+            <Button text="Personalizar" graphicTextGap="10" styleClass="menu-button" />
+            <Button text="Cerrar sesión" graphicTextGap="10" styleClass="menu-button" />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label text="PERSONALIZAR" style="-fx-font-size: 24px; -fx-text-fill: #34495E;" />
+            <ComboBox fx:id="themeSelector" promptText="Selecciona un color" />
+        </VBox>
+    </center>
+</BorderPane>
+
