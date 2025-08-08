@@ -41,7 +41,9 @@
 
                 <TableView fx:id="tablaProfesores" prefHeight="600.0" prefWidth="600">
                     <columns>
+                        <TableColumn fx:id="colNo" text="No." prefWidth="50" />
                         <TableColumn fx:id="colNombre" prefWidth="200" text="NOMBRE" />
+                        <TableColumn fx:id="colApellidos" prefWidth="200" text="APELLIDOS" />
                         <TableColumn fx:id="colDivision" prefWidth="200" text="DIVISIÓN" />
                         <TableColumn fx:id="colAcciones" prefWidth="180" text="ACCIONES" />
                     </columns>

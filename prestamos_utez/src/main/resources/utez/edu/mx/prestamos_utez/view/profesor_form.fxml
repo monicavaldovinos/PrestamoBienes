@@ -24,19 +24,19 @@
                     <children>
                         <!-- Campo Nombre -->
                         <Label text="Nombre del profesor:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="txtNombre" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <TextField fx:id="txtNombre" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                         <!-- Campo Apellidos -->
                         <Label text="Apellidos del profesor:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="txtProfesor" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtProfesor" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                         <!-- Campo Correo -->
                         <Label text="Correo electrónico:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="txtCorreo" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtCorreo" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                         <!-- Campo Telefono -->
                         <Label text="Telefono:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <TextField fx:id="txtTelefono" alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtTelefono" prefHeight="30.0" prefWidth="300.0" promptText="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                         <!-- Campo División -->
                         <Label text="División:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
@@ -54,7 +54,7 @@
                 <!-- Botones -->
                 <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="400.0" spacing="10">
    <children>
-                       <Button contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #969CA3; -fx-text-fill: white; -fx-font-weight: bold;" text="Cancelar" />
+                       <Button fx:id="btnCancelar" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #969CA3; -fx-text-fill: white; -fx-font-weight: bold;" text="Cancelar" onAction="#onCancelar" />
                        <Button contentDisplay="CENTER" onAction="#onGuardar" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #4A6FDB; -fx-text-fill: white; -fx-font-weight: bold;" text="Guardar">
                      <HBox.margin>
                         <Insets right="10.0" />

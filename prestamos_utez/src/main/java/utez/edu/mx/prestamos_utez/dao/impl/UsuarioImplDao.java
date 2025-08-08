@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class UsuarioImplDao implements IUsuarioDao {
     @Override
     public boolean login(String correo, String pass) throws SQLException {
-        String sql="SELECT * FROM USUARIOS WHERE CORREO=? AND PASSWORD=?";
+        String sql="SELECT * FROM USUARIO WHERE CORREO = ? AND CONTRASENA = ?";
         try {
             Connection con = DBConnection.getConnection();//Establcer conexion
             System.out.println("Conexión OK");
@@ -40,7 +40,7 @@ public class UsuarioImplDao implements IUsuarioDao {
     public static void main(String[] args) {
         UsuarioImplDao dao= new UsuarioImplDao();
         try{
-            System.out.println(dao.login("20243ds061@utez.edu.mx","1234"));
+            System.out.println(dao.login("ana@gmail.com","1234"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
