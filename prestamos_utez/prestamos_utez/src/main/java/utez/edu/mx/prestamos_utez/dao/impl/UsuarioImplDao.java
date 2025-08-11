@@ -3,6 +3,7 @@ package utez.edu.mx.prestamos_utez.dao.impl;
 
 import utez.edu.mx.prestamos_utez.config.DBConnection;
 import utez.edu.mx.prestamos_utez.dao.IUsuarioDao;
+import utez.edu.mx.prestamos_utez.model.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,40 +12,38 @@ import java.sql.SQLException;
 
 public class UsuarioImplDao implements IUsuarioDao {
     @Override
-    public boolean login(String CORREO, String PASSWORD) throws SQLException {
-        String sql="SELECT ID,CORREO,PASSWORD FROM USUARIOS WHERE CORREO=? AND PASSWORD=?";
-        try {
-            Connection con = DBConnection.getConnection();//Establcer conexion
+    public Usuario login(String correo, String pass) throws SQLException {
+        String sql = """
+            SELECT ID_USUARIO, NOMBRE, APELLIDOS, CORREO, ID_ROL
+            FROM USUARIO
+            WHERE CORREO = ? AND CONTRASENA = ?
+        """;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
             System.out.println("Conexión OK");
-            PreparedStatement ps = con.prepareStatement(sql); //Prepara la consulta para evitar inyeccion sql
-            ps.setString(1,CORREO);
-            ps.setString(2,PASSWORD);
             System.out.println("Ejecutando query:");
-            System.out.println("Correo: '" + CORREO + "'");
-            System.out.println("Password: '" + PASSWORD + "'");
+            System.out.println("Correo: '" + correo + "'");
+            System.out.println("Password: '" + pass + "'");
 
-            ResultSet resultSet = ps.executeQuery();//Se ejecuta la consulta
+            ps.setString(1, correo);
+            ps.setString(2, pass);
 
-            if(resultSet.next()){
-                return true;
-            }else{
-                return false;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setId(rs.getInt("ID_USUARIO"));
+                    u.setNombre(rs.getString("NOMBRE"));
+                    u.setApellidos(rs.getString("APELLIDOS"));
+                    u.setCorreo(rs.getString("CORREO"));
+                    u.setIdRol(rs.getString("ID_ROL"));
+                    return u; // éxito
+                }
+                return null; // credenciales inválidas
             }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
-
+    }
     }
 
-    public static void main(String[] args) {
-        UsuarioImplDao dao= new UsuarioImplDao();
-        try{
-            System.out.println(dao.login("20243ds061@utez.edu.mx","1234"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-}
 

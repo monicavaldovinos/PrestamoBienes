@@ -18,9 +18,10 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Hello!");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
-        stage.sizeToScene(); // si no estás usando dimensiones fijas
-        stage.show();
+
+
         // Centrar la ventana en la pantalla
         Rectangle2D pantalla = Screen.getPrimary().getVisualBounds();
         stage.setX((pantalla.getWidth() - stage.getWidth()) / 2);
