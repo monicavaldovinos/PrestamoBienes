@@ -93,4 +93,8 @@ public void actualizarCantidadYEstado(int idObjeto, int cantidad) throws SQLExce
             ps.executeUpdate();
         }
     }
+
+
+   
+
 }

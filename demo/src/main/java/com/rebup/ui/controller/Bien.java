@@ -1,4 +1,4 @@
-package com.rebup;
+package com.rebup.ui.controller;
 
 public class Bien {
     private String nombre;

@@ -1,4 +1,4 @@
-package com.rebup;
+package com.rebup.ui.controller;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
