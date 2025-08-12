@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/rebup/main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/rebup/view/main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(App.class.getResource("/com/rebup/styles.css").toExternalForm());
+        scene.getStylesheets().add(App.class.getResource("/com/rebup/css/styles.css").toExternalForm());
         stage.setTitle("Préstamos - REBUP");
         stage.setScene(scene);
         stage.show();

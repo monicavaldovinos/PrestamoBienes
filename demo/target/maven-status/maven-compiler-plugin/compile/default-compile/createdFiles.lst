@@ -1,0 +1,5 @@
+module-info.class
+com\rebup\model\Bien.class
+com\rebup\App.class
+com\rebup\ui\controller\MainController.class
+com\rebup\db\DBConnection.class

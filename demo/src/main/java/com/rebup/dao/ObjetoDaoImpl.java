@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjetoDaoImpl implements ObjetoDao {
+
     private Connection conn;
 
     public ObjetoDaoImpl(Connection conn) {
@@ -19,13 +20,12 @@ public class ObjetoDaoImpl implements ObjetoDao {
 
     @Override
     public List<Objeto> listarDisponibles() {
-       
         return obtenerObjetos("SELECT * FROM OBJETO WHERE ESTADO = 'Disponible'");
     }
 
     @Override
     public List<Objeto> listarNoDisponibles() {
-        return obtenerObjetos("SELECT * FROM OBJETO WHERE ESTADO = 'No disponible'");
+        return obtenerObjetos("SELECT * FROM OBJETO WHERE ESTADO != 'Disponible'");
     }
 
     private List<Objeto> obtenerObjetos(String sql) {

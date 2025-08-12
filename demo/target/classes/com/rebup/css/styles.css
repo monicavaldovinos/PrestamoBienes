@@ -1,0 +1,40 @@
+
+.side-bar {
+    -fx-background-color: #022E5D;
+}
+
+.side-bar-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24;
+    -fx-padding: 0 0 0 10;
+}
+
+.side-bar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-padding: 0 0 0 10;
+}
+
+.top-bar {
+    -fx-background-color: #00907A;
+}
+
+.top-bar-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22;
+    -fx-font-weight: bold;
+}
+
+.btn-confirmar {
+    -fx-background-color: #00907A;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-padding: 10 30;
+}
+
+.contador-label {
+    -fx-font-size: 14;
+    -fx-text-fill: #333333;
+    -fx-padding: 5 0 5 0;
+}
