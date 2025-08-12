@@ -7,7 +7,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/18"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.rebup.MainController">
+            fx:controller="com.rebup.ui.controller.MainController">
 
     <left>
         <VBox styleClass="side-bar" spacing="40" alignment="TOP_LEFT" prefWidth="180">
@@ -43,7 +43,7 @@
             </padding>
 
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="600">
-                <TextField fx:id="txtBuscar" promptText="Profesor" prefWidth="300" />
+                <ComboBox fx:id="cbProfesor" editable="true" promptText="Profesor" prefWidth="300"/>
                 <Pane HBox.hgrow="ALWAYS"/>
                 <ComboBox fx:id="comboFiltro" prefWidth="150" />
             </HBox>

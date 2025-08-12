@@ -1,9 +1,13 @@
 package com.rebup.dao;
 
-import com.rebup.model.Objeto;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.rebup.model.Objeto;
 
 public class ObjetoDaoImpl implements ObjetoDao {
 
@@ -28,6 +32,19 @@ public class ObjetoDaoImpl implements ObjetoDao {
         return obtenerObjetos("SELECT * FROM OBJETO WHERE ESTADO != 'Disponible'");
     }
 
+
+    @Override
+public void actualizarCantidadYEstado(int idObjeto, int cantidad) throws SQLException {
+    String sql = "UPDATE OBJETO SET CANTIDAD = ?, ESTADO = ? WHERE ID_OBJETO = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, cantidad);
+        ps.setString(2, cantidad > 0 ? "DISPONIBLE" : "NO DISPONIBLE");
+        ps.setInt(3, idObjeto);
+        ps.executeUpdate();
+    }
+}
+
+
     private List<Objeto> obtenerObjetos(String sql) {
         List<Objeto> lista = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql);
@@ -49,5 +66,31 @@ public class ObjetoDaoImpl implements ObjetoDao {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    @Override
+    public void actualizarCantidadObjeto(int idObjeto, int cantidad) throws SQLException {
+        String sql = "UPDATE OBJETO SET CANTIDAD = CANTIDAD + ? WHERE ID_OBJETO = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, cantidad);
+            ps.setInt(2, idObjeto);
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public void insertarObjeto(Objeto obj) throws SQLException {
+        String sql = "INSERT INTO OBJETO (NOMBRE, TIPO, NUMERO_SERIE, ESTADO, CANTIDAD, IMAGEN_URL, DESCRIPCION, NUMERO_INVENTARIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, obj.getNombre());
+            ps.setString(2, obj.getTipo());
+            ps.setString(3, obj.getNumeroSerie());
+            ps.setString(4, obj.getEstado());
+            ps.setInt(5, obj.getCantidad());
+            ps.setString(6, obj.getImagenUrl());
+            ps.setString(7, obj.getDescripcion());
+            ps.setString(8, obj.getNumeroInventario());
+            ps.executeUpdate();
+        }
     }
 }
