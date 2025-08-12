@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="utez.edu.mx.prestamos_utez.view.HistorialEntrega"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="utez.edu.mx.prestamos_utez.controller.HistorialEntregaController"
+      spacing="12" style="-fx-padding:20;">
+    <Label fx:id="lblTitulo" style="-fx-font-size:16; -fx-font-weight:bold;"/>
+    <Label fx:id="lblNota" text="Confirma para marcar como ENTREGADO."/>
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="btnCerrar" text="Cancelar" onAction="#onCerrar"/>
+        <Button fx:id="btnEntregar" text="Entregar" onAction="#onEntregar"/>
+    </HBox>
+</VBox>

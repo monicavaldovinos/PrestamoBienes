@@ -2,20 +2,36 @@ package utez.edu.mx.prestamos_utez.dao.impl;
 
 import utez.edu.mx.prestamos_utez.config.DBConnection;
 import utez.edu.mx.prestamos_utez.dao.IHistorialDao;
-import utez.edu.mx.prestamos_utez.model.*;
+import utez.edu.mx.prestamos_utez.model.HistorialPrestamo;
+import utez.edu.mx.prestamos_utez.model.PrestamoDetalle;
+
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HistorialImplDao implements IHistorialDao {
 
     @Override
     public List<HistorialPrestamo> listar() {
-        String sql = "SELECT ID_PRESTAMO, PROFESOR, CANTIDAD, FECHA_PRESTAMO, ESTADO " +
-                "FROM VW_PRESTAMO_RESUMEN ORDER BY ID_PRESTAMO DESC";
+        // Resumen por préstamo (sin vista, directo a tablas)
+        String sql = """
+            SELECT  p.ID_PRESTAMO,
+                    (d.NOMBRE || ' ' || d.APELLIDOS) AS PROFESOR,
+                    COUNT(pd.ID_DETALLE)              AS CANTIDAD,
+                    p.FECHA_PRESTAMO,
+                    p.ESTADO
+            FROM PRESTAMO p
+            JOIN DOCENTE d              ON d.ID_DOCENTE = p.ID_DOCENTE
+            LEFT JOIN PRESTAMO_DETALLE pd ON pd.ID_PRESTAMO = p.ID_PRESTAMO
+            GROUP BY p.ID_PRESTAMO, d.NOMBRE, d.APELLIDOS, p.FECHA_PRESTAMO, p.ESTADO
+            ORDER BY p.ID_PRESTAMO DESC
+        """;
+
         List<HistorialPrestamo> out = new ArrayList<>();
-        try (Connection c = DBConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 HistorialPrestamo h = new HistorialPrestamo();
                 h.setIdPrestamo(rs.getInt("ID_PRESTAMO"));
@@ -25,45 +41,87 @@ public class HistorialImplDao implements IHistorialDao {
                 h.setEstado(rs.getString("ESTADO"));
                 out.add(h);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return out;
     }
 
     @Override
     public List<PrestamoDetalle> detallesPorPrestamo(int idPrestamo) {
-        String sql = "SELECT pd.ID_DETALLE, a.NOMBRE ARTICULO, " +
-                "COALESCE(pd.NUM_SERIE, a.NUMERO_SERIE) NUM_SERIE, " +
-                "pd.NUM_INVENTARIO, pd.FECHA_ENTREGA, pd.ESTADO " +
-                "FROM PRESTAMO_DETALLE pd JOIN ARTICULO a ON a.ID_ARTICULO=pd.ID_ARTICULO " +
-                "WHERE pd.ID_PRESTAMO = ? ORDER BY pd.ID_DETALLE";
+        // Cohincidir con tu tabla PRESTAMO_DETALLE (usa DESCRIPCION_OBJ, NUM_SERIE, NUM_INVENTARIO, FECHA_ENTREGA, ESTADO)
+        String sql = """
+            SELECT ID_DETALLE, DESCRIPCION_OBJ, NUM_SERIE, NUM_INVENTARIO, FECHA_ENTREGA, ESTADO
+            FROM PRESTAMO_DETALLE
+            WHERE ID_PRESTAMO = ?
+            ORDER BY ID_DETALLE
+        """;
+
         List<PrestamoDetalle> out = new ArrayList<>();
-        try (Connection c = DBConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setInt(1, idPrestamo);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     PrestamoDetalle d = new PrestamoDetalle();
                     d.setIdDetalle(rs.getInt("ID_DETALLE"));
-                    d.setArticulo(rs.getString("ARTICULO"));
+                    d.setArticulo(rs.getString("DESCRIPCION_OBJ"));
                     d.setNumSerie(rs.getString("NUM_SERIE"));
                     d.setNumInventario(rs.getString("NUM_INVENTARIO"));
-                    d.setFechaEntrega(rs.getDate("FECHA_ENTREGA"));
-                    d.setEstado(rs.getString("ESTADO"));
+                    d.setFechaEntrega(rs.getDate("FECHA_ENTREGA")); // puede venir null
+                    d.setEstado(rs.getString("ESTADO"));            // PENDIENTE/ENTREGADO
                     out.add(d);
                 }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return out;
     }
 
     @Override
     public boolean marcarEntregado(int idDetalle) {
-        String sql = "UPDATE PRESTAMO_DETALLE SET ESTADO='ENTREGADO', FECHA_ENTREGA=SYSDATE WHERE ID_DETALLE=?";
-        try (Connection c = DBConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, idDetalle);
-            return ps.executeUpdate() == 1;
-        } catch (Exception e) { e.printStackTrace(); }
-        return false;
+        // 1) Marca el detalle como ENTREGADO (y fecha)
+        String updDet = "UPDATE PRESTAMO_DETALLE SET ESTADO='ENTREGADO', FECHA_ENTREGA=SYSDATE WHERE ID_DETALLE=?";
+
+        // 2) Si YA NO hay detalles pendientes para ese préstamo, marca el préstamo como ENTREGADO
+        String updPrestamo = """
+            UPDATE PRESTAMO p
+               SET p.ESTADO = 'ENTREGADO', p.FECHA_DEVOLUCION = SYSDATE
+             WHERE p.ID_PRESTAMO = (
+                    SELECT ID_PRESTAMO FROM PRESTAMO_DETALLE WHERE ID_DETALLE = ?
+             )
+               AND NOT EXISTS (
+                    SELECT 1
+                      FROM PRESTAMO_DETALLE pd
+                     WHERE pd.ID_PRESTAMO = p.ID_PRESTAMO
+                       AND UPPER(pd.ESTADO) = 'PENDIENTE'
+               )
+        """;
+
+        try (Connection con = DBConnection.getConnection()) {
+            con.setAutoCommit(false);
+
+            try (PreparedStatement p1 = con.prepareStatement(updDet)) {
+                p1.setInt(1, idDetalle);
+                if (p1.executeUpdate() == 0) { // no se afectó nada
+                    con.rollback();
+                    return false;
+                }
+            }
+            try (PreparedStatement p2 = con.prepareStatement(updPrestamo)) {
+                p2.setInt(1, idDetalle);
+                p2.executeUpdate();
+            }
+
+            con.commit();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

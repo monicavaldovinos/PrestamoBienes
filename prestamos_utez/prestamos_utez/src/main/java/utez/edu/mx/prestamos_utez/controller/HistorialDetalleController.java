@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 import utez.edu.mx.prestamos_utez.dao.impl.HistorialImplDao;
 import utez.edu.mx.prestamos_utez.model.PrestamoDetalle;
 import java.util.List;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class HistorialDetalleController {
     @FXML private TableView<PrestamoDetalle> tabla;
@@ -21,11 +25,34 @@ public class HistorialDetalleController {
     private int idPrestamo;
     private Runnable onCloseRefresh;
 
+
+    @FXML private void onCerrar() {
+        ((Stage) tabla.getScene().getWindow()).close();
+    }
     public void cargar(int idPrestamo, Runnable onCloseRefresh) {
         this.idPrestamo = idPrestamo;
         this.onCloseRefresh = onCloseRefresh;
-        cargarTabla();
+
+        configurarColumnas();   // <- IMPORTANTE: mapear columnas
         configurarAcciones();
+        cargarTabla();
+    }
+    private void configurarColumnas() {
+        // Deben coincidir con los getters de PrestamoDetalle
+        colObj.setCellValueFactory(new PropertyValueFactory<>("articulo"));
+        colSerie.setCellValueFactory(new PropertyValueFactory<>("numSerie"));
+        colInv.setCellValueFactory(new PropertyValueFactory<>("numInventario"));
+        colEntrega.setCellValueFactory(new PropertyValueFactory<>("fechaEntrega"));
+        colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        // (Opcional) formato de fecha yyyy-MM-dd (si viene null, mostrar vacío)
+        colEntrega.setCellFactory(col -> new TableCell<PrestamoDetalle, java.sql.Date>() {
+            private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            @Override protected void updateItem(java.sql.Date d, boolean empty) {
+                super.updateItem(d, empty);
+                setText(empty || d == null ? "" : d.toLocalDate().format(fmt));
+            }
+        });
     }
 
     private void cargarTabla() {
@@ -44,7 +71,10 @@ public class HistorialDetalleController {
             }
             @Override protected void updateItem(Void it, boolean empty) {
                 super.updateItem(it, empty);
-                if (empty) { setGraphic(null); return; }
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                    return;
+                }
                 PrestamoDetalle d = getTableView().getItems().get(getIndex());
                 btn.setDisable(!"PENDIENTE".equalsIgnoreCase(d.getEstado()));
                 setGraphic(btn);

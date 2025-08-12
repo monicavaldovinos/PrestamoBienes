@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="utez.edu.mx.prestamos_utez.view.HistorialList"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.HistorialListController">
+    <children>
+        <TableView fx:id="tabla" layoutX="28.0" layoutY="17.0" prefHeight="758.0" prefWidth="1212.0">
+            <columns>
+                <TableColumn fx:id="colNo" prefWidth="89.0" text="No." />
+                <TableColumn fx:id="colProfesor" prefWidth="272.0" text="Profesor" />
+                <TableColumn fx:id="colCantidad" prefWidth="209.0" text="Cantidad" />
+                <TableColumn fx:id="colFecha" prefWidth="208.0" text="Fecha Préstamo" />
+                <TableColumn fx:id="colEstado" prefWidth="215.0" text="Estado" />
+                <TableColumn fx:id="colAcciones" prefWidth="203.0" text="Acciones" />
+            </columns>
+        </TableView>
+    </children>
 </AnchorPane>

@@ -1,6 +1,7 @@
 package utez.edu.mx.prestamos_utez.model;
 
 import java.sql.Date;
+import java.util.logging.Logger;
 
 public class HistorialPrestamo {
     private int idPrestamo;
@@ -8,6 +9,7 @@ public class HistorialPrestamo {
     private int cantidad;
     private Date fechaPrestamo;
     private String estado;
+    private static final Logger logger = Logger.getLogger(HistorialPrestamo.class.getName());
 
 
     public HistorialPrestamo(int idPrestamo, String profesor, int cantidad, Date fechaPrestamo, String estado) {
@@ -16,6 +18,10 @@ public class HistorialPrestamo {
         this.cantidad = cantidad;
         this.fechaPrestamo = fechaPrestamo;
         this.estado = estado;
+    }
+
+    public HistorialPrestamo() {
+        // Constructor vacío para uso en DAO
     }
 
     public int getIdPrestamo() {

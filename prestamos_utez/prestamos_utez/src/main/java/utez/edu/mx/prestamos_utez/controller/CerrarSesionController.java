@@ -37,19 +37,18 @@ public class CerrarSesionController {
             FXMLLoader fx = new FXMLLoader(getClass().getResource(
                     "/utez/edu/mx/prestamos_utez/view/login.fxml"));
             Parent root = fx.load();
-
-            Stage stage = (Stage) dialog.getOwner();
-            stage.setScene(new Scene(root));
-            stage.setTitle("REBUP - Login");
-            stage.show();
-            stage.setMaximized(true);
-            stage.setFullScreen(true);
-            dialog.close();
-
+            if (owner != null) {
+                owner.setScene(new Scene(root));
+                owner.setTitle("REBUP - Login");
+                owner.show();
+                owner.setMaximized(true);
+                owner.setFullScreen(true);
+            }
+            if (dialog != null) {
+                dialog.close();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
-        } finally {
-            dialog.close();
         }
     }
 }

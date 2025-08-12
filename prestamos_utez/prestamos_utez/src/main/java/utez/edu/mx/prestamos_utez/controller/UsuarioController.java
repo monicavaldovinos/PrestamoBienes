@@ -43,7 +43,7 @@ public class UsuarioController {
                 System.out.println("Usuario Validado");
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        "/utez/edu/mx/prestamos_utez/view/profesor_list.fxml"));
+                        "/utez/edu/mx/prestamos_utez/view/MainLayout.fxml"));
                 Parent root = loader.load();
 
                 Stage stage = new Stage();

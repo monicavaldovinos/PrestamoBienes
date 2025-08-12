@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="utez.edu.mx.prestamos_utez.view.HistorialDetalle"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="utez.edu.mx.prestamos_utez.controller.HistorialDetalleController"
+      spacing="12" style="-fx-padding:16;">
+    <Label text="Objetos prestados" style="-fx-font-size:16; -fx-font-weight:bold;"/>
+    <TableView fx:id="tabla" prefHeight="320">
+        <columns>
+            <TableColumn fx:id="colObj" text="Objeto" prefWidth="220"/>
+            <TableColumn fx:id="colSerie" text="Num. serie" prefWidth="120"/>
+            <TableColumn fx:id="colInv" text="Num. inventario" prefWidth="140"/>
+            <TableColumn fx:id="colEntrega" text="Fecha entrega" prefWidth="120"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="120"/>
+        </columns>
+    </TableView>
+    <HBox alignment="CENTER_RIGHT" spacing="8">
+        <Button text="Cerrar" onAction="#onCerrar" />
+    </HBox>
+</VBox>

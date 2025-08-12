@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.ObjetoListController">
+    <children>
+
+        <!-- Vista principal -->
+        <BorderPane prefHeight="800.0" prefWidth="1280.0">
+            <top>
+                <HBox prefHeight="0.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+            </top>
+
+            <center>
+                <AnchorPane fx:id="contenidoPane">
+                    <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <HBox alignment="TOP_RIGHT" prefHeight="35.0" prefWidth="371.0" />
+                            </children>
+                        </VBox>
+
+                        <TableView fx:id="tablaObjetos" layoutX="20.0" layoutY="71.0" prefHeight="709.0" prefWidth="1242.0">
+                            <columns>
+                                <TableColumn fx:id="colNo" prefWidth="91.0" text="No." />
+                                <TableColumn fx:id="colNombre" prefWidth="431.0" text="Nombre" />
+                                <TableColumn fx:id="colCantidad" prefWidth="192.0" text="Cantidad" />
+                                <TableColumn fx:id="colDivision" prefWidth="282.0" text="División" />
+                                <TableColumn fx:id="colAcciones" prefWidth="245.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Acción" />
+                            </columns>
+                        </TableView>
+
+
+                        <HBox alignment="TOP_RIGHT" />
+                        <Button fx:id="btnAgregarObjeto" layoutX="1086.0" layoutY="14.0" prefHeight="40" prefWidth="180" style="-fx-background-color: #0B3D91; -fx-text-fill: white; -fx-font-weight: bold;" text="AGREGAR OBJETO" />
+                    </children>
+                </AnchorPane>
+            </center>
+        </BorderPane>
+
+        <!-- Ventana modal encima (inicialmente oculta) -->
+        <AnchorPane fx:id="modalPane" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false">
+            <children>
+                <VBox fx:id="formularioContainer" alignment="CENTER" layoutX="150.0" layoutY="80.0">
+                    <children>
+                        <Label text="Cargando formulario..." />
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

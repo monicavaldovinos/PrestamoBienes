@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0"
+            stylesheets="@../css/profesor_list.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="utez.edu.mx.prestamos_utez.controller.MainLayoutController">
+
+    <!-- Header -->
+    <top>
+        <BorderPane style="-fx-background-color: #009688; -fx-padding: 10;">
+            <left>
+                <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="REBUP"/>
+            </left>
+            <center>
+                <Label fx:id="tituloPrincipal"
+                       style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"
+                       text="PROFESORES"/>
+            </center>
+        </BorderPane>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" spacing="16" prefWidth="200"
+              style="-fx-background-color: #0B3D91; -fx-padding: 24;">
+            <children>
+                <Button text="Profesores"   styleClass="sidebar-button" onAction="#mostrarProfesores"/>
+                <Button text="Objetos"      styleClass="sidebar-button" onAction="#mostrarObjetos"/>
+                <Button text="Historial"    styleClass="sidebar-button" onAction="#mostrarHistorial"/>
+                <Button fx:id="btnPersonalizar" text="Personalizar" styleClass="sidebar-button" onAction="#mostrarPersonalizar"/>
+                <Button fx:id="btnUsuarios" text="Usuarios" onAction="#abrirUsuarios" styleClass="sidebar-button"/>
+                <Button text="Cerrar sesión" styleClass="sidebar-button" onAction="#mostrarCerrarSesion" />
+            </children>
+        </VBox>
+    </left>
+
+    <!-- Contenido central dinámico -->
+    <center>
+        <StackPane fx:id="contenidoCentral"/>
+    </center>
+
+
+</BorderPane>

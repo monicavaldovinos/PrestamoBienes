@@ -20,6 +20,10 @@ public class PrestamoDetalle {
         this.estado = estado;
     }
 
+    public PrestamoDetalle() {
+        // Constructor vacío para uso en DAO
+    }
+
     public int getIdDetalle() {
         return idDetalle;
     }

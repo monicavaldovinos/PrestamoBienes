@@ -2,81 +2,92 @@ package utez.edu.mx.prestamos_utez.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import utez.edu.mx.prestamos_utez.dao.IProfesorDao;
 import utez.edu.mx.prestamos_utez.dao.impl.ProfesorImplDao;
-import utez.edu.mx.prestamos_utez.model.Profesor;
-import javafx.fxml.Initializable;
-import java.net.URL;
-import java.util.ResourceBundle;
-import utez.edu.mx.prestamos_utez.model.Division;
 import utez.edu.mx.prestamos_utez.dao.impl.DivisionImpDao;
+import utez.edu.mx.prestamos_utez.model.Division;
+import utez.edu.mx.prestamos_utez.model.Profesor;
 
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 public class ProfesorFormController implements Initializable {
 
-    @FXML
-    private TextField txtNombre;
+    @FXML private TextField txtNombre;
+    @FXML private ComboBox<Division> cbDivision;
+    @FXML private TextField txtProfesor; // apellidos
+    @FXML private TextField txtCorreo;
+    @FXML private TextField txtTelefono;
+    @FXML private Button btnCancelar;
 
-    @FXML
-    private ComboBox<Division> cbDivision;
-
-    @FXML
-    private TextField txtProfesor;
-
-    @FXML
-    private TextField txtCorreo;
-
-    @FXML
-    private TextField txtTelefono;
-
-    @FXML
-    private Button btnCancelar;
+    private Profesor profesorEditando;
+    private ProfesorListController profesorListController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cargarDivisiones();
-
+        var usuario = utez.edu.mx.prestamos_utez.sesion.AdministradorSesion.getUsuarioActual();
+        if (usuario != null && "Encargado".equalsIgnoreCase(usuario.getNombreRol())) {
+            // Solo mostrar la división del encargado y deshabilitar el ComboBox
+            cbDivision.getItems().clear();
+            cbDivision.getItems().add(new Division(usuario.getIdDivision(), usuario.getNombreDivision()));
+            cbDivision.getSelectionModel().selectFirst();
+            cbDivision.setDisable(true);
+        } else {
+            cargarDivisiones();
+            cbDivision.setDisable(false);
+        }
     }
-    private Profesor profesorEditando;
 
     private void cargarDivisiones() {
-        DivisionImpDao dao = new DivisionImpDao();
-        cbDivision.getItems().addAll(dao.obtenerDivisiones());
+        try {
+            DivisionImpDao dao = new DivisionImpDao();
+            cbDivision.getItems().setAll(dao.obtenerDivisiones());
+            // if (!cbDivision.getItems().isEmpty()) cbDivision.getSelectionModel().selectFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,
+                    "No se pudieron cargar las divisiones: " + e.getMessage()).showAndWait();
+        }
     }
-    private ProfesorListController profesorListController;
 
+    // Para refrescar tabla al guardar
     public void setProfesorListController(ProfesorListController controller) {
         this.profesorListController = controller;
     }
+
     public void setProfesorAEditar(Profesor p) {
         this.profesorEditando = p;
-        // precargar campos
-        txtNombre.setText(p.getNombre());
-        txtProfesor.setText(p.getApellidos());
-        txtCorreo.setText(p.getCorreo());
-        txtTelefono.setText(p.getTelefono());
-        // seleccionar división en el combo
-        if (cbDivision.getItems() != null) {
+        if (p == null) return;
+
+        txtNombre.setText(nullSafe(p.getNombre()));
+        txtProfesor.setText(nullSafe(p.getApellidos()));
+        txtCorreo.setText(nullSafe(p.getCorreo()));
+        txtTelefono.setText(nullSafe(p.getTelefono()));
+
+        // seleccionar división en el combo (por nombre)
+        if (cbDivision.getItems() != null && p.getDivision() != null) {
             cbDivision.getItems().stream()
-                    .filter(d -> d.getNombre().equalsIgnoreCase(p.getDivision()))
+                    .filter(d -> d.getNombre() != null
+                            && d.getNombre().equalsIgnoreCase(p.getDivision()))
                     .findFirst()
                     .ifPresent(cbDivision::setValue);
         }
     }
+
     @FXML
     private void onGuardar(ActionEvent event) {
-        String nombre = txtNombre.getText();
-        String apellidos = txtProfesor.getText();
-        String correo = txtCorreo.getText();
-        String telefono = txtTelefono.getText();
+        String nombre    = trimOrEmpty(txtNombre.getText());
+        String apellidos = trimOrEmpty(txtProfesor.getText());
+        String correo    = trimOrEmpty(txtCorreo.getText());
+        String telefono  = trimOrEmpty(txtTelefono.getText());
         Division divisionSeleccionada = cbDivision.getValue();
 
         if (divisionSeleccionada == null || nombre.isBlank() || apellidos.isBlank()) {
-            System.out.println("Faltan datos obligatorios");
+            new Alert(Alert.AlertType.WARNING, "Faltan datos obligatorios (nombre, apellidos, división).").showAndWait();
             return;
         }
 
@@ -89,12 +100,12 @@ public class ProfesorFormController implements Initializable {
             profesor.setApellidos(apellidos);
             profesor.setCorreo(correo);
             profesor.setTelefono(telefono);
-            profesor.setIdDivision(divisionSeleccionada.getId());
-            profesor.setDivision(divisionSeleccionada.getNombre());
+            profesor.setIdDivision(divisionSeleccionada.getId());   // FK
+            profesor.setDivision(divisionSeleccionada.getNombre()); // si almacenan nombre también
 
             boolean ok = dao.create(profesor);
             if (!ok) {
-                System.out.println("No se pudo guardar el profesor");
+                new Alert(Alert.AlertType.ERROR, "No se pudo guardar el profesor.").showAndWait();
                 return;
             }
         } else {
@@ -108,7 +119,7 @@ public class ProfesorFormController implements Initializable {
 
             boolean ok = dao.update(profesorEditando);
             if (!ok) {
-                System.out.println("No se pudo actualizar el profesor");
+                new Alert(Alert.AlertType.ERROR, "No se pudo actualizar el profesor.").showAndWait();
                 return;
             }
         }
@@ -116,17 +127,14 @@ public class ProfesorFormController implements Initializable {
         if (profesorListController != null) {
             profesorListController.cargarProfesores();
         }
-        ((Stage) txtNombre.getScene().getWindow()).close();
+        ((Stage) btnCancelar.getScene().getWindow()).close();
     }
 
     @FXML
     private void onCancelar(ActionEvent event) {
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
-        stage.close();
+        ((Stage) btnCancelar.getScene().getWindow()).close();
     }
 
-
-
-
+    private static String nullSafe(String s) { return s == null ? "" : s; }
+    private static String trimOrEmpty(String s) { return s == null ? "" : s.trim(); }
 }
-

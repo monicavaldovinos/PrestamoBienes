@@ -21,12 +21,16 @@ public class HistorialListController {
     @FXML private TableColumn<HistorialPrestamo, Integer> colCantidad;
     @FXML private TableColumn<HistorialPrestamo, java.sql.Date> colFecha;
     @FXML private TableColumn<HistorialPrestamo, Void> colAcciones;
+    @FXML private TabPane tabPane;
+    @FXML private Tab tabHistorial;
+    @FXML private Tab tabObjetos;
+    @FXML private Button btnObjetos;
+    @FXML private Button btnHistorial;
 
     public void initialize() {
         colNo.setCellValueFactory(cd ->
                 Bindings.createIntegerBinding(() -> tabla.getItems().indexOf(cd.getValue()) + 1));
-        colProfesor.setCellValueFactory(c -> javafx.beans.property.SimpleStringProperty
-                .stringExpression(c.getValue().getProfesor()));
+        colProfesor.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getProfesor()));
         colEstado.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getEstado()));
         colCantidad.setCellValueFactory(c -> new javafx.beans.property.SimpleIntegerProperty(c.getValue().getCantidad()).asObject());
         colFecha.setCellValueFactory(c -> new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getFechaPrestamo()));
@@ -44,7 +48,7 @@ public class HistorialListController {
         colAcciones.setCellFactory(col -> new TableCell<>() {
             final Button btn = new Button();
             { // ícono de ojo
-                ImageView eye = new ImageView(getClass().getResource("/utez/edu/mx/prestamos_utez/icons/eye.png").toExternalForm());
+                ImageView eye = new ImageView(getClass().getResource("/utez/edu/mx/prestamos_utez/icons/ver.png").toExternalForm());
                 eye.setFitWidth(18); eye.setFitHeight(18);
                 btn.setGraphic(eye); btn.setStyle("-fx-background-color: transparent;");
                 btn.setOnAction(e -> {
@@ -72,5 +76,17 @@ public class HistorialListController {
             st.setScene(new Scene(root));
             st.showAndWait();
         } catch (Exception ex) { ex.printStackTrace(); }
+    }
+
+    @FXML
+    private void mostrarPestanaObjetos() {
+        System.out.println("Cambiando a pestaña Objetos");
+        tabPane.getSelectionModel().select(1); // segunda pestaña (Objetos)
+    }
+
+    @FXML
+    private void mostrarPestanaHistorial() {
+        System.out.println("Cambiando a pestaña Historial");
+        tabPane.getSelectionModel().select(0); // primera pestaña (Historial)
     }
 }

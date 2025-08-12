@@ -53,6 +53,21 @@ public class ProfesorListController implements Initializable {
         btnAgregarProfesor.setOnAction(e -> abrirFormularioCrear());
     }
     @FXML
+    private void abrirHistorial() {
+        try {
+            FXMLLoader fx = new FXMLLoader(getClass().getResource(
+                    "/utez/edu/mx/prestamos_utez/view/historial_list.fxml"));
+            Parent root = fx.load();
+
+            Stage st = new Stage();
+            st.setTitle("Historial de préstamos");
+            st.setScene(new Scene(root));
+            st.setMaximized(true); // si quieres pantalla completa
+            st.show();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    @FXML
     private void onCerrarSesion(javafx.event.ActionEvent e) {
         try {
             FXMLLoader fx = new FXMLLoader(getClass().getResource(
@@ -77,11 +92,20 @@ public class ProfesorListController implements Initializable {
     }
 
 
-
     public void cargarProfesores() {
         IProfesorDao dao = new ProfesorImplDao();
-        List<Profesor> lista = dao.obtenerTodos();
-        tablaProfesores.getItems().setAll(lista);
+        var usuario = AdministradorSesion.getUsuarioActual();
+        if (usuario != null && "Encargado".equalsIgnoreCase(usuario.getNombreRol()) && usuario.getNombreDivision() != null) {
+            // Filtrar por división del encargado
+            // Aquí necesitas el id de la división, ajusta si tienes el id
+            // Si solo tienes el nombre, deberías obtener el id por nombre
+            // Supongamos que tienes el id en usuario.getIdDivision()
+            List<Profesor> lista = ((ProfesorImplDao)dao).obtenerPorDivision(usuario.getIdDivision());
+            tablaProfesores.getItems().setAll(lista);
+        } else {
+            List<Profesor> lista = dao.obtenerTodos();
+            tablaProfesores.getItems().setAll(lista);
+        }
     }
 
     private void abrirFormularioCrear() {
@@ -142,6 +166,8 @@ public class ProfesorListController implements Initializable {
             }
         });
     }
+
+
 
     private void configurarColumnaAcciones() {
         colAcciones.setCellFactory(param -> new TableCell<>() {

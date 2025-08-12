@@ -147,7 +147,34 @@ public class ProfesorImplDao implements IProfesorDao {
             return false;
         }
     }
-
-
+    public List<Profesor> obtenerPorDivision(int idDivision) {
+        List<Profesor> lista = new ArrayList<>();
+        String sql =
+                "SELECT d.ID_DOCENTE, d.NOMBRE, d.APELLIDOS, d.CORREO, d.TELEFONO, " +
+                "       v.NOMBRE AS DIVISION " +
+                "FROM DOCENTE d " +
+                "JOIN DOCENTE_DIVISION dd ON d.ID_DOCENTE = dd.ID_DOCENTE " +
+                "JOIN DIVISION v ON v.ID_DIVISION = dd.ID_DIVISION " +
+                "WHERE v.ID_DIVISION = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idDivision);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Profesor p = new Profesor();
+                    p.setId(rs.getInt("ID_DOCENTE"));
+                    p.setNombre(rs.getString("NOMBRE"));
+                    p.setApellidos(rs.getString("APELLIDOS"));
+                    p.setCorreo(rs.getString("CORREO"));
+                    p.setTelefono(rs.getString("TELEFONO"));
+                    p.setDivision(rs.getString("DIVISION"));
+                    lista.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 
 }
