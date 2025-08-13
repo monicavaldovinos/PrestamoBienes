@@ -24,26 +24,24 @@ public class ObjetoDaoImpl implements ObjetoDao {
 
     @Override
     public List<Objeto> listarDisponibles() {
-        return obtenerObjetos("SELECT * FROM OBJETO WHERE ESTADO = 'Disponible'");
+        return obtenerObjetos("SELECT * FROM OBJETO WHERE CANTIDAD > 0");
     }
 
     @Override
     public List<Objeto> listarNoDisponibles() {
-        return obtenerObjetos("SELECT * FROM OBJETO WHERE ESTADO != 'Disponible'");
+        return obtenerObjetos("SELECT * FROM OBJETO WHERE CANTIDAD = 0");
     }
-
 
     @Override
-public void actualizarCantidadYEstado(int idObjeto, int cantidad) throws SQLException {
-    String sql = "UPDATE OBJETO SET CANTIDAD = ?, ESTADO = ? WHERE ID_OBJETO = ?";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, cantidad);
-        ps.setString(2, cantidad > 0 ? "DISPONIBLE" : "NO DISPONIBLE");
-        ps.setInt(3, idObjeto);
-        ps.executeUpdate();
+    public void actualizarCantidadYEstado(int idObjeto, int cantidad) throws SQLException {
+        String sql = "UPDATE OBJETO SET CANTIDAD = ?, ESTADO = ? WHERE ID_OBJETO = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, cantidad);
+            ps.setString(2, cantidad > 0 ? "DISPONIBLE" : "NO DISPONIBLE");
+            ps.setInt(3, idObjeto);
+            ps.executeUpdate();
+        }
     }
-}
-
 
     private List<Objeto> obtenerObjetos(String sql) {
         List<Objeto> lista = new ArrayList<>();
@@ -93,8 +91,4 @@ public void actualizarCantidadYEstado(int idObjeto, int cantidad) throws SQLExce
             ps.executeUpdate();
         }
     }
-
-
-   
-
 }
