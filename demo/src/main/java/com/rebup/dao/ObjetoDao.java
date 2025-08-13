@@ -12,4 +12,5 @@ public interface ObjetoDao {
     void actualizarCantidadObjeto(int idObjeto, int cantidad) throws SQLException;
     void insertarObjeto(Objeto obj) throws SQLException;
     void actualizarCantidadYEstado(int idObjeto, int cantidad) throws SQLException;
+    Objeto obtenerPorId(int idObjeto);
 }

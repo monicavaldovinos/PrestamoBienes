@@ -4,10 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.rebup.dao.ObjetoDao;
 import com.rebup.dao.ObjetoDaoImpl;
@@ -28,6 +26,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -39,7 +39,7 @@ public class MainController {
     @FXML private ComboBox<String> comboFiltro;
     @FXML private Button btnConfirmar;
     @FXML private ImageView logo;
-    @FXML private Label lblContador;
+   
 
     private Map<String, Integer> seleccionados = new HashMap<>();
 
@@ -110,15 +110,16 @@ public class MainController {
         actualizarContador();
     }
 
-    private Map<String, Integer> maxCantidadesPorTipo = new HashMap<>();
+ 
 
-   private void mostrarEquipos(String filtro) {
+  private Map<Integer, Integer> maxCantidadesPorObjeto = new HashMap<>();
+
+private void mostrarEquipos(String filtro) {
     gridEquipos.getChildren().clear();
     btnConfirmar.setDisable(seleccionados.isEmpty());
     actualizarContador();
 
     List<Objeto> objetosFiltrados;
-
     switch (filtro) {
         case "Disponible":
             objetosFiltrados = objetoDao.listarDisponibles();
@@ -131,40 +132,28 @@ public class MainController {
             break;
     }
 
-    maxCantidadesPorTipo.clear();
+    maxCantidadesPorObjeto.clear();
     for (Objeto obj : objetosFiltrados) {
-        String tipo = (obj.getTipo() == null || obj.getTipo().isBlank()) ? "desconocido" : obj.getTipo().toLowerCase();
-        int cantidad = obj.getCantidad();
-        maxCantidadesPorTipo.put(tipo, maxCantidadesPorTipo.getOrDefault(tipo, 0) + cantidad);
+        maxCantidadesPorObjeto.put(obj.getIdObjeto(), obj.getCantidad());
     }
 
     int columna = 0, fila = 0;
-    Set<String> tiposAgregados = new HashSet<>();
 
     for (Objeto obj : objetosFiltrados) {
-        String tipoOriginal = obj.getTipo();
-        final String tipoFinal;
-        if (tipoOriginal == null || tipoOriginal.isBlank()) {
-            tipoFinal = "desconocido";
-        } else {
-            tipoFinal = tipoOriginal.toLowerCase();
-        }
-
-        if (tiposAgregados.contains(tipoFinal)) continue;
-        tiposAgregados.add(tipoFinal);
-
         VBox contenedor = new VBox(5);
         contenedor.setAlignment(Pos.CENTER);
         contenedor.setPadding(new Insets(10));
 
-        String rutaImagen = "/com/rebup/images/" + tipoFinal + ".png";
+        String imagenUrl = obj.getImagenUrl();
         Image imagen;
         try {
-            imagen = new Image(getClass().getResourceAsStream(rutaImagen));
-            if (imagen.isError())
-                continue;
+            if (imagenUrl != null && !imagenUrl.isBlank()) {
+                imagen = new Image(imagenUrl, false);
+            } else {
+                imagen = new Image(getClass().getResourceAsStream("/com/rebup/images/default.png"));
+            }
         } catch (Exception e) {
-            continue;
+            imagen = new Image(getClass().getResourceAsStream("/com/rebup/images/default.png"));
         }
 
         ImageView imageView = new ImageView(imagen);
@@ -172,8 +161,8 @@ public class MainController {
         imageView.setFitHeight(120);
         imageView.setCursor(Cursor.HAND);
 
-        StackPane imageWithOverlay = new StackPane();
-        imageWithOverlay.setPrefSize(120, 120);
+        StackPane imageWithOverlay = new StackPane(imageView);
+        imageWithOverlay.setPrefSize(120, 120);       
 
         Label plusLabel = new Label("+");
         plusLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
@@ -181,6 +170,7 @@ public class MainController {
         plusCircle.setStyle("-fx-background-color: #00907A; -fx-background-radius: 50%;");
         plusCircle.setPrefSize(24, 24);
         plusCircle.setMaxSize(24, 24);
+        plusCircle.setMinSize(24, 24);
         StackPane.setAlignment(plusCircle, Pos.TOP_RIGHT);
         StackPane.setMargin(plusCircle, new Insets(3, 3, 0, 0));
 
@@ -190,82 +180,50 @@ public class MainController {
         minusCircle.setStyle("-fx-background-color: #E94B3C; -fx-background-radius: 50%;");
         minusCircle.setPrefSize(24, 24);
         minusCircle.setMaxSize(24, 24);
-        StackPane.setAlignment(minusCircle, Pos.TOP_LEFT);
+        minusCircle.setMinSize(24, 24);
+        StackPane.setAlignment(minusCircle, Pos.TOP_LEFT);  
         StackPane.setMargin(minusCircle, new Insets(3, 0, 0, 3));
 
-        int cantidadSeleccionada = seleccionados.getOrDefault(tipoFinal, 0);
+
+        int cantidadSeleccionada = seleccionados.getOrDefault(String.valueOf(obj.getIdObjeto()), 0);
         minusCircle.setVisible(cantidadSeleccionada > 0);
 
-        imageWithOverlay.getChildren().addAll(imageView, plusCircle, minusCircle);
+        imageWithOverlay.getChildren().addAll(plusCircle, minusCircle);
 
         StackPane imageBorderPane = new StackPane(imageWithOverlay);
-        imageBorderPane.setPrefSize(130, 130);
+        imageBorderPane.setPrefSize(130, 130);         
         imageBorderPane.setStyle("-fx-border-color: #D2D2D2; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
 
-        String textoBoton = (obj.getNombre() != null && !obj.getNombre().isEmpty())
-                ? obj.getNombre()
-                : tipoFinal.substring(0, 1).toUpperCase() + tipoFinal.substring(1);
-
-        Button botonObjeto = new Button(textoBoton);
+        Button botonObjeto = new Button(obj.getNombre());
         botonObjeto.setPrefSize(110, 25);
         botonObjeto.setStyle("-fx-background-color: #00907A; -fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 8;");
 
+        plusCircle.setOnMouseClicked(e -> {
+            agregarObjeto(obj.getIdObjeto(), imageBorderPane, minusCircle);
+            mostrarEquipos(filtro);
+        });
         imageView.setOnMouseClicked(e -> {
-            agregarObjeto(tipoFinal, imageBorderPane, minusCircle);
+            agregarObjeto(obj.getIdObjeto(), imageBorderPane, minusCircle);
             mostrarEquipos(filtro);
         });
         botonObjeto.setOnAction(e -> {
-            agregarObjeto(tipoFinal, imageBorderPane, minusCircle);
-            mostrarEquipos(filtro);
-        });
-        plusCircle.setOnMouseClicked(e -> {
-            agregarObjeto(tipoFinal, imageBorderPane, minusCircle);
+            agregarObjeto(obj.getIdObjeto(), imageBorderPane, minusCircle);
             mostrarEquipos(filtro);
         });
         minusCircle.setOnMouseClicked(e -> {
-            disminuirObjeto(tipoFinal, imageBorderPane, minusCircle);
+            disminuirObjeto(obj.getIdObjeto(), imageBorderPane, minusCircle);
             mostrarEquipos(filtro);
         });
 
         contenedor.getChildren().addAll(imageBorderPane, botonObjeto);
 
-        VBox contenedorCompleto = new VBox(5);
-        contenedorCompleto.setAlignment(Pos.CENTER);
-        contenedorCompleto.getChildren().add(contenedor);
-
-        int maxCantidad = maxCantidadesPorTipo.getOrDefault(tipoFinal, 0);
-
-        if (cantidadSeleccionada >= maxCantidad) {
-            StackPane alertaWrapper = new StackPane();
-            alertaWrapper.getChildren().add(contenedorCompleto);
-
-            HBox alertaNoMasBox = new HBox();
-            alertaNoMasBox.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 6; -fx-background-radius: 6;");
-            alertaNoMasBox.setPadding(new Insets(3, 8, 3, 8));
-            alertaNoMasBox.setMaxWidth(170);
-            alertaNoMasBox.setMinHeight(18);
-            alertaNoMasBox.setMaxHeight(18);
-            alertaNoMasBox.setAlignment(Pos.CENTER_LEFT);
-            alertaNoMasBox.setSpacing(5);
-
-            Label alertaTexto = new Label("¡NO HAY MAS OBJETOS!");
+        if (cantidadSeleccionada >= maxCantidadesPorObjeto.getOrDefault(obj.getIdObjeto(), 0)) {
+            Label alertaTexto = new Label("¡NO HAY MÁS OBJETOS!");
             alertaTexto.setStyle("-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 10px;");
-            alertaTexto.setWrapText(false);
-
-            Button btnCerrar = new Button("X");
-            btnCerrar.setStyle("-fx-background-color: transparent; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 10px; -fx-padding: 0;");
-            btnCerrar.setOnAction(ev -> alertaWrapper.getChildren().remove(alertaNoMasBox));
-
-            alertaNoMasBox.getChildren().addAll(alertaTexto, btnCerrar);
-
-            alertaWrapper.getChildren().add(alertaNoMasBox);
-            StackPane.setAlignment(alertaNoMasBox, Pos.TOP_RIGHT);
-            StackPane.setMargin(alertaNoMasBox, new Insets(-10, -10, 0, 0));
-
-            gridEquipos.add(alertaWrapper, columna, fila);
-        } else {
-            gridEquipos.add(contenedorCompleto, columna, fila);
+            contenedor.getChildren().add(alertaTexto);
         }
+
+        gridEquipos.add(contenedor, columna, fila);
 
         columna++;
         if (columna == 3) {
@@ -276,127 +234,151 @@ public class MainController {
 }
 
 
-    private void agregarObjeto(String tipo, StackPane borderPane, StackPane minusCircle) {
-        int maxCantidad = maxCantidadesPorTipo.getOrDefault(tipo, Integer.MAX_VALUE);
-        int actual = seleccionados.getOrDefault(tipo, 0);
-        if (actual < maxCantidad) {
-            seleccionados.put(tipo, actual + 1);
-            borderPane.setStyle("-fx-border-color: #00907A; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
-            minusCircle.setVisible(true);
-            actualizarContador();
-            btnConfirmar.setDisable(false);
+    private void agregarObjeto(int idObjeto, StackPane borderPane, StackPane minusCircle) {
+    int maxCantidad = maxCantidadesPorObjeto.getOrDefault(idObjeto, Integer.MAX_VALUE);
+    int actual = seleccionados.getOrDefault(String.valueOf(idObjeto), 0);
+    if (actual < maxCantidad) {
+        seleccionados.put(String.valueOf(idObjeto), actual + 1);
+        borderPane.setStyle("-fx-border-color: #00907A; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        minusCircle.setVisible(true);
+        actualizarContador();
+        btnConfirmar.setDisable(false);
+    }
+}
+
+private void disminuirObjeto(int idObjeto, StackPane borderPane, StackPane minusCircle) {
+    String key = String.valueOf(idObjeto);
+    if (seleccionados.containsKey(key)) {
+        int count = seleccionados.get(key);
+        if (count > 1) {
+            seleccionados.put(key, count - 1);
+        } else {
+            seleccionados.remove(key);
+            borderPane.setStyle("-fx-border-color: #D2D2D2; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
+            minusCircle.setVisible(false);
         }
+        actualizarContador();
+        btnConfirmar.setDisable(seleccionados.isEmpty());
+    }
+}
+
+@FXML
+private VBox contadoresBox;
+@FXML
+private Label lblContador;
+
+private void actualizarContador() {
+    contadoresBox.getChildren().clear();
+    int totalObjetos = 0;
+
+    for (Map.Entry<String, Integer> entry : seleccionados.entrySet()) {
+        int idObjeto = Integer.parseInt(entry.getKey());
+        Objeto obj = objetoDao.obtenerPorId(idObjeto);
+        String texto;
+        if (obj != null) {
+            texto = "Llevas " + entry.getValue() + " " + obj.getNombre();
+            if (entry.getValue() > 1) texto += "s";
+        } else {
+            texto = "Llevas " + entry.getValue() + " objeto desconocido";
+        }
+        totalObjetos += entry.getValue();
+        Label label = new Label(texto);
+        label.setStyle("-fx-font-size: 14px; -fx-text-fill: black;");
+        contadoresBox.getChildren().add(label);
     }
 
-    private void disminuirObjeto(String tipo, StackPane borderPane, StackPane minusCircle) {
-        if (seleccionados.containsKey(tipo)) {
-            int count = seleccionados.get(tipo);
-            if (count > 1) {
-                seleccionados.put(tipo, count - 1);
-            } else {
-                seleccionados.remove(tipo);
-                borderPane.setStyle("-fx-border-color: #D2D2D2; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10;");
-                minusCircle.setVisible(false);
-            }
-            actualizarContador();
-            btnConfirmar.setDisable(seleccionados.isEmpty());
-        }
+    lblContador.setText("Llevas en total " + totalObjetos );
+    StackPane.setMargin(contadoresBox, new Insets(10, 0, 0, 0));
+}
+
+private void mostrarResumenSeleccion() {
+    Scene escenaPrincipal = btnConfirmar.getScene();
+    GaussianBlur blur = new GaussianBlur(15);
+    escenaPrincipal.getRoot().setEffect(blur);
+
+    Stage resumenStage = new Stage();
+    resumenStage.initModality(Modality.APPLICATION_MODAL);
+    resumenStage.setTitle("Confirmación de préstamo");
+
+    Label titulo = new Label("¿ESTÁS SEGURO DE CONFIRMAR EL PRÉSTAMO?");
+    titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
+    Label subtitulo = new Label("Has seleccionado:");
+    subtitulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;");
+
+    VBox listaSeleccion = new VBox(5);
+    listaSeleccion.setPadding(new Insets(10));
+    for (Map.Entry<String, Integer> entry : seleccionados.entrySet()) {
+        int idObjeto = Integer.parseInt(entry.getKey());
+        Objeto obj = objetoDao.obtenerPorId(idObjeto);
+        String nombre = (obj != null) ? obj.getNombre() : "objeto desconocido";
+        String texto = entry.getValue() + " " + nombre;
+        if (entry.getValue() > 1) texto += "s";
+        Label item = new Label(texto);
+        item.setStyle("-fx-font-size: 16px; -fx-text-fill: black;");
+        listaSeleccion.getChildren().add(item);
     }
 
-    private void actualizarContador() {
-        if (lblContador != null) {
-            if (seleccionados.isEmpty()) {
-                lblContador.setText("No has seleccionado objetos");
-            } else {
-                StringBuilder sb = new StringBuilder();
-                int total = 0;
-                for (Map.Entry<String, Integer> entry : seleccionados.entrySet()) {
-                    sb.append("Llevas ").append(entry.getValue()).append(" ").append(entry.getKey());
-                    if (entry.getValue() > 1) sb.append("s");
-                    sb.append("\n");
-                    total += entry.getValue();
-                }
-                sb.append("Llevas en total ").append(total).append(" objeto");
-                if (total != 1) sb.append("s");
-                lblContador.setText(sb.toString());
-            }
+    Button btnEliminar = new Button("Eliminar selección");
+    btnEliminar.setPrefSize(220, 60);
+    btnEliminar.setStyle("-fx-background-color: #C2C2C2; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 16px;");
+
+    Button btnCancelar = new Button("Cancelar");
+    btnCancelar.setPrefSize(220, 60);
+    btnCancelar.setStyle("-fx-background-color: #C2C2C2; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 16px;");
+
+    Button btnAceptar = new Button("Aceptar");
+    btnAceptar.setPrefSize(220, 60);
+    btnAceptar.setStyle("-fx-background-color: #4A6FDB; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
+
+    btnEliminar.setOnAction(e -> {
+        seleccionados.clear();
+        actualizarContador();
+        btnConfirmar.setDisable(true);
+        resumenStage.close();
+        Scene escenaPrincipal2 = btnConfirmar.getScene();
+        if (escenaPrincipal2 != null) {
+            escenaPrincipal2.getRoot().setEffect(null);
         }
-    }
+        mostrarEquipos(comboFiltro.getValue());
+    });
 
-    private void mostrarResumenSeleccion() {
-        Scene escenaPrincipal = btnConfirmar.getScene();
-        GaussianBlur blur = new GaussianBlur(15);
-        escenaPrincipal.getRoot().setEffect(blur);
+    btnCancelar.setOnAction(e -> {
+        resumenStage.close();
+        escenaPrincipal.getRoot().setEffect(null);
+    });
 
-        Stage resumenStage = new Stage();
-        resumenStage.initModality(Modality.APPLICATION_MODAL);
-        resumenStage.setTitle("Confirmación de préstamo");
-
-        Label titulo = new Label("¿ESTÁS SEGURO DE CONFIRMAR EL PRÉSTAMO?");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-
-        VBox listaSeleccion = new VBox(5);
-        listaSeleccion.setPadding(new Insets(10));
-        for (Map.Entry<String, Integer> entry : seleccionados.entrySet()) {
-            String texto = entry.getValue() + " × " + entry.getKey() + (entry.getValue() > 1 ? "s" : "");
-            Label item = new Label(texto);
-            item.setStyle("-fx-font-size: 16px;");
-            listaSeleccion.getChildren().add(item);
+    btnAceptar.setOnAction(e -> {
+        try {
+            guardarSeleccionados();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
+        resumenStage.close();
+        escenaPrincipal.getRoot().setEffect(null);
+    });
 
-        Button btnEliminar = new Button("Eliminar selección");
-        btnEliminar.setPrefSize(296, 73);
-        btnEliminar.setStyle("-fx-background-color: #C2C2C2; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 18px;");
+    HBox botones = new HBox(10, btnEliminar, btnCancelar, btnAceptar);
+    botones.setAlignment(Pos.CENTER);
+    botones.setPadding(new Insets(15, 0, 0, 0)); // 📌 Un poco de espacio encima de los botones
 
-        Button btnCancelar = new Button("Cancelar");
-        btnCancelar.setPrefSize(296, 73);
-        btnCancelar.setStyle("-fx-background-color: #C2C2C2; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 18px;");
+    Region espacio = new Region();
+    espacio.setMinHeight(20); // 📌 Espacio mínimo
+    espacio.setPrefHeight(40); // 📌 Espacio moderado
+    VBox.setVgrow(espacio, Priority.NEVER); // 📌 No se expande infinito
 
-        Button btnAceptar = new Button("Aceptar");
-        btnAceptar.setPrefSize(296, 73);
-        btnAceptar.setStyle("-fx-background-color: #4A6FDB; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 18px;");
+    VBox layout = new VBox(20, titulo, subtitulo, listaSeleccion, espacio, botones);
+    layout.setAlignment(Pos.CENTER);
+    layout.setPadding(new Insets(25));
+    layout.setStyle("-fx-background-color: white; -fx-border-radius: 15; -fx-background-radius: 15;");
 
-        btnEliminar.setOnAction(e -> {
-            seleccionados.clear();
-            actualizarContador();
-            btnConfirmar.setDisable(true);
-            resumenStage.close();
-            Scene escenaPrincipal2 = btnConfirmar.getScene();
-            if (escenaPrincipal2 != null) {
-                escenaPrincipal2.getRoot().setEffect(null);
-            }
-            mostrarEquipos(comboFiltro.getValue());
-        });
+    Scene scene = new Scene(layout, 700, 420);
+    resumenStage.setScene(scene);
+    resumenStage.centerOnScreen();
+    resumenStage.showAndWait();
+}
 
-        btnCancelar.setOnAction(e -> {
-            resumenStage.close();
-            escenaPrincipal.getRoot().setEffect(null);
-        });
 
-        btnAceptar.setOnAction(e -> {
-            try {
-                guardarSeleccionados();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            resumenStage.close();
-            escenaPrincipal.getRoot().setEffect(null);
-        });
-
-        HBox botones = new HBox(10, btnEliminar, btnCancelar, btnAceptar);
-        botones.setAlignment(Pos.CENTER);
-        botones.setPadding(new Insets(10));
-
-        VBox layout = new VBox(20, titulo, listaSeleccion, botones);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(25));
-        layout.setStyle("-fx-background-color: white; -fx-border-radius: 15; -fx-background-radius: 15;");
-
-        Scene scene = new Scene(layout, 700, 420);
-        resumenStage.setScene(scene);
-        resumenStage.centerOnScreen();
-        resumenStage.showAndWait();
-    }
 
     private void guardarSeleccionados() throws SQLException {
         for (Map.Entry<String, Integer> entry : seleccionados.entrySet()) {

@@ -48,10 +48,16 @@
                 <ComboBox fx:id="comboFiltro" prefWidth="150" />
             </HBox>
 
+           
+            <VBox fx:id="contadoresBox" spacing="5" alignment="TOP_CENTER" />
+
+        
             <Label fx:id="lblContador" text="Llevas 0 objetos" styleClass="contador-label" />
 
+           
             <GridPane fx:id="gridEquipos" hgap="40" vgap="40" alignment="CENTER" />
 
+            
             <Button fx:id="btnConfirmar" text="Confirmar préstamo" maxWidth="220" styleClass="btn-confirmar" />
         </VBox>
     </center>

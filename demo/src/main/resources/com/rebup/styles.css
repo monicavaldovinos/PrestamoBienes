@@ -48,3 +48,8 @@
 .combo-box:editable .arrow {
     -fx-background-color: black;
 }
+
+.contador-label {
+    -fx-text-fill: black;
+}
+

@@ -91,4 +91,31 @@ public class ObjetoDaoImpl implements ObjetoDao {
             ps.executeUpdate();
         }
     }
+
+    @Override
+public Objeto obtenerPorId(int idObjeto) {
+    String sql = "SELECT * FROM OBJETO WHERE ID_OBJETO = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, idObjeto);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return new Objeto(
+                    rs.getInt("ID_OBJETO"),
+                    rs.getString("NOMBRE"),
+                    rs.getString("TIPO"),
+                    rs.getString("NUMERO_SERIE"),
+                    rs.getString("ESTADO"),
+                    rs.getInt("CANTIDAD"),
+                    rs.getString("IMAGEN_URL"),
+                    rs.getString("DESCRIPCION"),
+                    rs.getString("NUMERO_INVENTARIO")
+                );
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+
 }
