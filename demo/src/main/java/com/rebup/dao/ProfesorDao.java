@@ -13,7 +13,7 @@ import com.rebup.model.Profesor;
 public class ProfesorDao {
     public List<Profesor> listar() {
         String sql = "SELECT ID_DOCENTE, NOMBRE || ' ' || APELLIDOS AS NOMBRE "
-                + "FROM DOCENTE d ORDER BY 2";
+                   + "FROM DOCENTE d ORDER BY 2";
         List<Profesor> out = new ArrayList<>();
         try (Connection c = DBConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql);
@@ -21,7 +21,9 @@ public class ProfesorDao {
             while (rs.next()) {
                 out.add(new Profesor(rs.getInt(1), rs.getString(2)));
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return out;
-     }
-}   
+    }
+}
