@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="10" prefHeight="200" prefWidth="430" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.AreaFormController">
+
+    <padding>
+        <Insets bottom="12" left="12" right="12" top="12" />
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints minWidth="120" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+
+    <children>
+        <Label text="Nombre del área:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtNombre" prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Label text="División:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <ComboBox fx:id="cbDivision" prefWidth="280" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <Button onAction="#onCancelar" prefHeight="35" prefWidth="100" style="-fx-background-color:#969CA3; -fx-text-fill:white; -fx-font-weight:bold;" text="Cancelar" />
+                <Button onAction="#onGuardar" prefHeight="35" prefWidth="100" style="-fx-background-color:#1e88e5; -fx-text-fill:white; -fx-font-weight:bold;" text="Guardar" />
+            </children>
+        </HBox>
+    </children>
+</GridPane>

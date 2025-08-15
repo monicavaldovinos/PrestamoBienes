@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="791.0" prefWidth="800.0" spacing="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.DivisionListController">
+
+    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+   <children>
+   
+       <HBox spacing="10">
+           <children>
+               <Label style="-fx-font-size:16; -fx-font-weight:bold;" text="Divisiones" />
+               <Pane HBox.hgrow="ALWAYS" />
+               <Button onAction="#nuevaDivision" prefHeight="31.0" prefWidth="142.0" style="-fx-background-color: #0B3D91;" text="Nueva división" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+           </children>
+       </HBox>
+   
+       <TableView fx:id="tblDivisiones" prefHeight="730.0" prefWidth="780.0">
+           <columns>
+               <TableColumn fx:id="colNo" minWidth="80.0" prefWidth="135.0" text="No." />
+               <TableColumn fx:id="colNombre" minWidth="300.0" prefWidth="790.0" text="Nombre" />
+               <TableColumn fx:id="colAcciones" minWidth="120.0" prefWidth="387.0" text="Acciones" />
+           </columns>
+       </TableView>
+   </children>
+</VBox>

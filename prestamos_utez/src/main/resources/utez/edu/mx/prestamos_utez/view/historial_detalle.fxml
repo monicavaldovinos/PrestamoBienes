@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" style="-fx-padding:16;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.HistorialDetalleController">
+   <children>
+       <Label style="-fx-font-size:16; -fx-font-weight:bold;" text="Objetos prestados" />
+       <TableView fx:id="tabla" prefHeight="320">
+           <columns>
+               <TableColumn fx:id="colObj" prefWidth="220" text="Objeto" />
+               <TableColumn fx:id="colSerie" prefWidth="120" text="Num. serie" />
+               <TableColumn fx:id="colInv" prefWidth="140" text="Num. inventario" />
+               <TableColumn fx:id="colEntrega" prefWidth="120" text="Fecha entrega" />
+               <TableColumn fx:id="colEstado" prefWidth="100" text="Estado" />
+               <TableColumn fx:id="colAcciones" prefWidth="120" text="Acciones" />
+           </columns>
+       </TableView>
+       <HBox alignment="CENTER_RIGHT" spacing="8">
+          <children>
+              <Button onAction="#onCerrar" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #0B3D91;" text="Cerrar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+          </children>
+       </HBox>
+   </children>
+</VBox>

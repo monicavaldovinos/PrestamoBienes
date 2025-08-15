@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<GridPane hgap="12" vgap="10"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="utez.edu.mx.prestamos_utez.controller.DivisionFormController"
+          prefWidth="420" prefHeight="180">
+    <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+
+    <children>
+        <Label text="División" style="-fx-font-size:18; -fx-font-weight:bold;"
+               GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
+
+        <Label text="Nombre:" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtNombre" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="260"/>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <Button text="Cancelar" onAction="#onCancelar"
+                        prefWidth="100" prefHeight="32" style="-fx-background-color:#969CA3; -fx-text-fill:white;">
+                    <font><Font name="System Bold" size="14"/></font>
+                </Button>
+                <Button text="Guardar" onAction="#onGuardar"
+                        prefWidth="100" prefHeight="32" style="-fx-background-color:#1e88e5; -fx-text-fill:white;">
+                    <font><Font name="System Bold" size="14"/></font>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+</GridPane>

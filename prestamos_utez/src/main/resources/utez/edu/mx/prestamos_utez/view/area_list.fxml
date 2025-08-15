@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="560" prefWidth="800" spacing="12" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.AreaListController">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+   <children>
+   
+       <!-- Encabezado / toolbar -->
+       <HBox spacing="10">
+           <children>
+               <Label style="-fx-font-size: 16; -fx-font-weight: bold;" />
+               <Pane HBox.hgrow="ALWAYS" />
+               <Button onAction="#nuevaArea" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #0B3D91;" text="Nueva área" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+           </children>
+       </HBox>
+   
+       <!-- Tabla -->
+       <TableView fx:id="tblAreas" tableMenuButtonVisible="false" VBox.vgrow="ALWAYS">
+           <!-- deja que la última columna crezca -->
+           <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+           </columnResizePolicy>
+   
+           <columns>
+               <TableColumn fx:id="colNo" maxWidth="80" minWidth="60" text="No." />
+               <TableColumn fx:id="colNombre" minWidth="200" text="Área" />
+               <TableColumn fx:id="colDivision" minWidth="160" text="División" />
+               <TableColumn fx:id="colAcciones" maxWidth="140" minWidth="120" text="Acciones" />
+           </columns>
+       </TableView>
+   </children>
+</VBox>

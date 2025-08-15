@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" style="-fx-padding:16;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.PendientesController">
+    <children>
+        <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" onAction="#refrescar"
+                style="-fx-background-color: #022E5D;" text="Refrescar" textFill="#f8f7f7"
+                prefWidth="120" prefHeight="30" />
+
+        <TableView fx:id="tabla" prefHeight="500">
+            <columns>
+                <TableColumn fx:id="colNo" prefWidth="60" text="No." />
+                <TableColumn fx:id="colProfesor" prefWidth="240" text="Profesor" />
+                <TableColumn fx:id="colCantidad" prefWidth="120" text="Cantidad" />
+                <TableColumn fx:id="colFecha" prefWidth="140" text="Fecha solicitud" />
+                <TableColumn fx:id="colEstado" prefWidth="120" text="Estado" />
+                <TableColumn fx:id="colAcciones" prefWidth="240" text="Acciones" />
+            </columns>
+        </TableView>
+        <HBox alignment="CENTER_RIGHT" spacing="8" />
+    </children>
+</VBox>

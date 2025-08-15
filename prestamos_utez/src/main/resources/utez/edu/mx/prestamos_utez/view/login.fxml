@@ -32,10 +32,13 @@
                         <Insets />
                      </VBox.margin></TextField>
                   <PasswordField id="input-field" fx:id="txtPass" promptText="Ingresa tu contraseña" />
-                  <Button id="btn-login" fx:id="btnLogin" onAction="#onLogin" prefHeight="37.0" prefWidth="300.0" style="-fx-background-color: #008b76;" text="Login" textFill="WHITE">
+                  <Button id="btn-login" fx:id="btnLogin" onAction="#onLogin" prefHeight="37.0" prefWidth="300.0" style="-fx-background-color: #008b76;" text="Iniciar" textFill="WHITE">
                      <VBox.margin>
                         <Insets />
-                     </VBox.margin></Button>
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Button>
 
               </children>
            </VBox>

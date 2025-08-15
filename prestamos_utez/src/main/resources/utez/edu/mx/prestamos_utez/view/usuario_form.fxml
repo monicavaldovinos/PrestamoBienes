@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="379.0" prefWidth="536.0" spacing="18.0" style="-fx-padding:16;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.UsuarioFormController">
+   <children>
+       <Label alignment="CENTER" prefHeight="27.0" prefWidth="535.0" style="-fx-font-size:18; -fx-font-weight:bold;" text="Usuario" />
+   
+       <GridPane hgap="10.0" prefHeight="240.0" prefWidth="504.0" vgap="15.0">
+           <columnConstraints>
+               <ColumnConstraints percentWidth="29.0" />
+               <ColumnConstraints percentWidth="71.0" />
+           </columnConstraints>
+           <children>
+               <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+               <TextField fx:id="txtNombre" prefHeight="31.0" prefWidth="362.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+   
+               <Label text="Apellidos:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+               <TextField fx:id="txtApellidos" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+   
+               <Label text="Correo electrónico:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+               <TextField fx:id="txtCorreo" prefHeight="31.0" prefWidth="357.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+   
+               <Label text="Rol:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+               <ComboBox fx:id="cmbRol" prefHeight="31.0" prefWidth="429.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+   
+               <Label text="Contraseña:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+               <PasswordField fx:id="txtPass" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+               <Label fx:id="lblDivision" managed="false" prefHeight="31.0" prefWidth="429.0" text="División:" visible="false" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+               <ComboBox fx:id="cmbDivision" managed="false" prefHeight="31.0" prefWidth="429.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+           </children>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints /> <!-- para división -->
+         </rowConstraints>
+       </GridPane>
+   
+       <HBox alignment="CENTER_RIGHT" spacing="8">
+      <children>
+              <Button onAction="#cancelar" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #969CA3;" text="Cancelar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+              <Button onAction="#guardar" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #4A6FDB;" text="Guardar" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+      </children>
+       </HBox>
+   </children>
+</VBox>

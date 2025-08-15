@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utez.edu.mx.prestamos_utez.controller.CerrarSesionController">
+    <center>
+        <VBox alignment="CENTER" prefHeight="322.0" prefWidth="475.0" spacing="15" style="-fx-padding: 20;">
+           <children>
+               <ImageView fitHeight="60" fitWidth="60">
+                   <image>
+                       <Image url="@../icons/advertencia.png" /> <!-- tu imagen de advertencia -->
+                   </image>
+               </ImageView>
+               <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="¿ESTÁS SEGURO DE CERRAR SESIÓN?">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+               <HBox alignment="CENTER" prefHeight="58.0" prefWidth="435.0" spacing="10">
+                  <children>
+                      <Button onAction="#onCancelar" prefHeight="35.0" prefWidth="140.0" style="-fx-background-color: #969CA3;" text="Cancelar" textFill="#fffafa">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
+                      <Button onAction="#onConfirmar" prefHeight="35.0" prefWidth="140.0" style="-fx-text-fill: white; -fx-background-color: #4A6FDB;" text="¡Sí, cerrar sesión!">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
+                  </children>
+               </HBox>
+           </children>
+        </VBox>
+    </center>
+</BorderPane>

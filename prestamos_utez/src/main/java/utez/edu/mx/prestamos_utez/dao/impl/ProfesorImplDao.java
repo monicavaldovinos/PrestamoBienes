@@ -15,10 +15,12 @@ public class ProfesorImplDao implements IProfesorDao {
         List<Profesor> lista = new ArrayList<>();
         String sql =
                 "SELECT d.ID_DOCENTE, d.NOMBRE, d.APELLIDOS, d.CORREO, d.TELEFONO, " +
-                        "       v.NOMBRE AS DIVISION " +
+                        "       v.ID_DIVISION, v.NOMBRE AS DIVISION, a.ID_AREA, a.NOMBRE AS AREA " +
                         "FROM DOCENTE d " +
                         "JOIN DOCENTE_DIVISION dd ON d.ID_DOCENTE = dd.ID_DOCENTE " +
-                        "JOIN DIVISION v ON v.ID_DIVISION = dd.ID_DIVISION";
+                        "JOIN DIVISION v ON v.ID_DIVISION = dd.ID_DIVISION " +
+                        "LEFT JOIN AREA a ON a.ID_AREA = dd.ID_AREA " +        // <- puede ser null si aún no asignan
+                        "ORDER BY d.ID_DOCENTE";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -31,28 +33,29 @@ public class ProfesorImplDao implements IProfesorDao {
                 p.setApellidos(rs.getString("APELLIDOS"));
                 p.setCorreo(rs.getString("CORREO"));
                 p.setTelefono(rs.getString("TELEFONO"));
+                p.setIdDivision(rs.getInt("ID_DIVISION"));
                 p.setDivision(rs.getString("DIVISION"));
+                p.setIdArea(rs.getInt("ID_AREA"));          // 0 si null
+                p.setArea(rs.getString("AREA"));            // puede ser null
                 lista.add(p);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
         return lista;
     }
+
     @Override
     public boolean create(Profesor profesor) {
         String insertDoc =
                 "INSERT INTO DOCENTE (NOMBRE, APELLIDOS, CORREO, TELEFONO) VALUES (?, ?, ?, ?)";
-        String curval =
-                "SELECT SEQ_DOCENTE_ID.CURRVAL FROM DUAL";
+        String curval = "SELECT SEQ_DOCENTE_ID.CURRVAL FROM DUAL";
         String insertRel =
-                "INSERT INTO DOCENTE_DIVISION (ID_DOCENTE, ID_DIVISION) VALUES (?, ?)";
+                "INSERT INTO DOCENTE_DIVISION (ID_DOCENTE, ID_DIVISION, ID_AREA) VALUES (?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection()) {
             con.setAutoCommit(false);
 
-            // 1) Inserta DOCENTE (sin ID)
+            // DOCENTE
             try (PreparedStatement ps = con.prepareStatement(insertDoc)) {
                 ps.setString(1, profesor.getNombre());
                 ps.setString(2, profesor.getApellidos());
@@ -61,7 +64,7 @@ public class ProfesorImplDao implements IProfesorDao {
                 ps.executeUpdate();
             }
 
-            // 2) Recupera el ID generado por el trigger/secuencia
+            // ID generado
             int idDocente;
             try (PreparedStatement ps = con.prepareStatement(curval);
                  ResultSet rs = ps.executeQuery()) {
@@ -69,10 +72,15 @@ public class ProfesorImplDao implements IProfesorDao {
                 idDocente = rs.getInt(1);
             }
 
-            // 3) Inserta la relación con la división (si aplica)
+            // Relación división + área
             try (PreparedStatement ps = con.prepareStatement(insertRel)) {
                 ps.setInt(1, idDocente);
-                ps.setInt(2, profesor.getIdDivision());  // asegúrate de pasar un ID válido
+                ps.setInt(2, profesor.getIdDivision());
+                if (profesor.getIdArea() > 0) {
+                    ps.setInt(3, profesor.getIdArea());
+                } else {
+                    ps.setNull(3, Types.INTEGER);
+                }
                 ps.executeUpdate();
             }
 
@@ -88,38 +96,44 @@ public class ProfesorImplDao implements IProfesorDao {
         String delRel = "DELETE FROM DOCENTE_DIVISION WHERE ID_DOCENTE = ?";
         String delDoc = "DELETE FROM DOCENTE WHERE ID_DOCENTE = ?";
 
-        try (Connection con = DBConnection.getConnection()) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
             con.setAutoCommit(false);
 
-            try (PreparedStatement p1 = con.prepareStatement(delRel);
-                 PreparedStatement p2 = con.prepareStatement(delDoc)) {
-
-                // Primero borrar en tabla intermedia
+            try (PreparedStatement p1 = con.prepareStatement(delRel)) {
                 p1.setInt(1, id);
-                p1.executeUpdate();
+                p1.executeUpdate();  // primero borra relaciones (evita ORA-02292)
+            }
 
-                // Luego borrar el docente
+            int rowsDoc;
+            try (PreparedStatement p2 = con.prepareStatement(delDoc)) {
                 p2.setInt(1, id);
-                p2.executeUpdate();
+                rowsDoc = p2.executeUpdate();   // luego borra el docente
             }
 
             con.commit();
-            return true;
-
-        } catch (Exception e) {
+            return rowsDoc > 0; // true si realmente borró el docente
+        } catch (SQLException e) {
             e.printStackTrace();
+            if (con != null) try { con.rollback(); } catch (SQLException ignored) {}
             return false;
+        } finally {
+            if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException ignored) {}
         }
     }
+
+
     @Override
     public boolean update(Profesor profesor) {
         String updDoc = "UPDATE DOCENTE SET NOMBRE=?, APELLIDOS=?, CORREO=?, TELEFONO=? WHERE ID_DOCENTE=?";
         String delRel = "DELETE FROM DOCENTE_DIVISION WHERE ID_DOCENTE=?";
-        String insRel = "INSERT INTO DOCENTE_DIVISION (ID_DOCENTE, ID_DIVISION) VALUES (?, ?)";
+        String insRel = "INSERT INTO DOCENTE_DIVISION (ID_DOCENTE, ID_DIVISION, ID_AREA) VALUES (?, ?, ?)";
 
         try (Connection con = DBConnection.getConnection()) {
             con.setAutoCommit(false);
 
+            // DOCENTE
             try (PreparedStatement p1 = con.prepareStatement(updDoc)) {
                 p1.setString(1, profesor.getNombre());
                 p1.setString(2, profesor.getApellidos());
@@ -129,7 +143,7 @@ public class ProfesorImplDao implements IProfesorDao {
                 p1.executeUpdate();
             }
 
-            // Si también puede cambiar de división, refrescamos la relación
+            // Refrescar relación
             try (PreparedStatement p2 = con.prepareStatement(delRel)) {
                 p2.setInt(1, profesor.getId());
                 p2.executeUpdate();
@@ -137,6 +151,11 @@ public class ProfesorImplDao implements IProfesorDao {
             try (PreparedStatement p3 = con.prepareStatement(insRel)) {
                 p3.setInt(1, profesor.getId());
                 p3.setInt(2, profesor.getIdDivision());
+                if (profesor.getIdArea() > 0) {
+                    p3.setInt(3, profesor.getIdArea());
+                } else {
+                    p3.setNull(3, Types.INTEGER);
+                }
                 p3.executeUpdate();
             }
 
@@ -148,6 +167,46 @@ public class ProfesorImplDao implements IProfesorDao {
         }
     }
 
+
+    @Override
+    public List<Profesor> obtenerPorDivision(int idDivision) {
+        List<Profesor> lista = new ArrayList<>();
+        String sql =
+                "SELECT d.ID_DOCENTE, d.NOMBRE, d.APELLIDOS, d.CORREO, d.TELEFONO, " +
+                        "       v.ID_DIVISION, v.NOMBRE AS DIVISION, " +
+                        "       a.ID_AREA, a.NOMBRE AS AREA " +
+                        "FROM DOCENTE d " +
+                        "JOIN DOCENTE_DIVISION dd ON d.ID_DOCENTE = dd.ID_DOCENTE " +
+                        "JOIN DIVISION v ON v.ID_DIVISION = dd.ID_DIVISION " +
+                        "LEFT JOIN AREA a ON a.ID_AREA = dd.ID_AREA " +
+                        "WHERE v.ID_DIVISION = ? " +
+                        "ORDER BY d.ID_DOCENTE";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idDivision);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Profesor p = new Profesor();
+                    p.setId(rs.getInt("ID_DOCENTE"));
+                    p.setNombre(rs.getString("NOMBRE"));
+                    p.setApellidos(rs.getString("APELLIDOS"));
+                    p.setCorreo(rs.getString("CORREO"));
+                    p.setTelefono(rs.getString("TELEFONO"));
+
+                    p.setIdDivision(rs.getInt("ID_DIVISION"));
+                    p.setDivision(rs.getString("DIVISION"));
+                    p.setIdArea(rs.getInt("ID_AREA"));     // 0 si es NULL
+                    p.setArea(rs.getString("AREA"));       // puede ser null
+
+                    lista.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 
 
 }
